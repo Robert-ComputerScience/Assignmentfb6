@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e4ae5f67-a013-4cbc-a589-49fa29fa9b6b" name="Changes" comment="GUI update">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/model/CurrUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginScreenController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/Viewing.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/Viewingscreen.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/Viewingscreen.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/key.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/loginscreen.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/registerscreen.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/splashscreen.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/WebContainerController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/WebContainerController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/WebContainerController$Bridge.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/WebContainerController$Bridge.class" afterDir="false" />
-    </list>
+    <list default="true" id="e4ae5f67-a013-4cbc-a589-49fa29fa9b6b" name="Changes" comment="GUI update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,7 +159,7 @@
       <workItem from="1710690942533" duration="7228000" />
       <workItem from="1710732741753" duration="608000" />
       <workItem from="1710733353801" duration="5503000" />
-      <workItem from="1750974292080" duration="7596000" />
+      <workItem from="1750974292080" duration="7902000" />
     </task>
     <task id="LOCAL-00001" summary="reduce Java version to 17">
       <option name="closed" value="true" />
@@ -203,7 +185,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710737242393</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="GUI update">
+      <option name="closed" value="true" />
+      <created>1750989533634</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1750989533634</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
