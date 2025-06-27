@@ -1,0 +1,133 @@
+/*
+ * File: Viewing_screen.css
+ * Description: Styling for the LandingView dashboard.
+ */
+
+/* --- General & Root Styles --- */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f8f9fa; /* A very light grey background */
+}
+
+/* --- Panel Styling --- */
+.input-panel {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 0);
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-alignment: top-center;
+}
+
+.table-panel {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 0);
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-alignment: top-center;
+}
+
+/* --- Text Fields --- */
+.input-field {
+    -fx-background-color: #e9ecef; /* Light grey input field */
+    -fx-prompt-text-fill: #6c757d;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px 10px;
+}
+
+.input-field:focused {
+    -fx-border-color: #007bff; /* Blue border on focus */
+    -fx-background-color: white;
+}
+
+/* --- Buttons --- */
+.button {
+    -fx-background-color: #6c757d; /* Default grey button */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+.button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.button-primary { -fx-background-color: #007bff; } /* Blue Add button */
+.button-primary:hover { -fx-background-color: #0056b3; }
+
+.button-secondary { -fx-background-color: #28a745; } /* Green Edit button */
+.button-secondary:hover { -fx-background-color: #218838; }
+
+.button-delete { -fx-background-color: #dc3545; } /* Red Delete button */
+.button-delete:hover { -fx-background-color: #c82333; }
+
+.button-clear { -fx-background-color: #ffc107; } /* Yellow Clear button */
+.button-clear:hover { -fx-background-color: #e0a800; }
+
+.button-refresh { -fx-background-color: #17a2b8; } /* Teal Refresh button */
+.button-refresh:hover { -fx-background-color: #138496; }
+
+/* --- TableView Styling --- */
+.table-view {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #343a40; /* Dark header background */
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-padding: 10px 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.table-row-cell {
+    -fx-background-color: -fx-table-cell-border-color, white;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 10px 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-table-cell-border-color, #f5f5f5; /* Zebra striping */
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #007bff; /* Selected row color */
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: white;
+}
+
+.table-cell {
+    -fx-alignment: CENTER; /* Center content in cells */
+    -fx-padding: 5px 10px;
+}
+
+/* --- Labels --- */
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
+
+/* --- ImageView --- */
+.profile-image {
+    -fx-border-color: #ced4da;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+}
