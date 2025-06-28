@@ -1,0 +1,14 @@
+com\example\csc325_firebase_webview_auth\view\App.class
+com\example\csc325_firebase_webview_auth\view\SplashScreenController.class
+com\example\csc325_firebase_webview_auth\model\Person.class
+com\example\csc325_firebase_webview_auth\view\WebContainerController$1.class
+com\example\csc325_firebase_webview_auth\model\CurrUser.class
+com\example\csc325_firebase_webview_auth\view\LoginFormController.class
+com\example\csc325_firebase_webview_auth\view\WebContainerController.class
+com\example\csc325_firebase_webview_auth\view\RegisterFormController.class
+module-info.class
+com\example\csc325_firebase_webview_auth\model\User.class
+com\example\csc325_firebase_webview_auth\view\WebContainerController$Bridge.class
+com\example\csc325_firebase_webview_auth\model\FirestoreContext.class
+com\example\csc325_firebase_webview_auth\view\AccessFBView.class
+com\example\csc325_firebase_webview_auth\viewmodel\AccessDataViewModel.class

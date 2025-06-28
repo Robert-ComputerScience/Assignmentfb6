@@ -1,0 +1,3036 @@
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.csc325_firebase_webview_auth.view;\r\n\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n// The import for FirebaseUser is no longer needed since we are not using the client SDK.\r\n// import com.google.firebase.auth.FirebaseUser; // REMOVE THIS LINE\r\nimport javafx.animation.KeyFrame;\r\nimport javafx.animation.Timeline;\r\nimport javafx.fxml.FXML;\r\nimport javafx.fxml.Initializable;\r\nimport javafx.scene.control.Label;\r\nimport javafx.util.Duration;\r\n\r\nimport java.io.IOException;\r\nimport java.net.URL;\r\nimport java.util.ResourceBundle;\r\nimport java.util.logging.Level;\r\nimport java.util.logging.Logger;\r\nimport com.example.csc325_firebase_webview_auth.model.CurrUser; // Ensure this import is present\r\n\r\n/**\r\n * Controller for the authentication-aware splash screen.\r\n * This class checks if a user is logged in using a custom session state mechanism\r\n * and redirects the application to the appropriate view (dashboard or login).\r\n */\r\npublic class SplashScreenController implements Initializable {\r\n\r\n    // --- FXML Injected Components ---\r\n    // The statusLabel is used to provide feedback to the user during the check.\r\n    @FXML private Label statusLabel;\r\n\r\n    // --- Constants ---\r\n    // The duration the splash screen will be displayed before redirecting.\r\n    private static final int SPLASH_DURATION_SECONDS = 3;\r\n    private static final Logger logger = Logger.getLogger(SplashScreenController.class.getName());\r\n\r\n    /**\r\n     * Initializes the controller after the FXML has been loaded.\r\n     * This method sets up a timer to perform the authentication check and redirection.\r\n     * @param url The location of the FXML file.\r\n     * @param rb The resources.\r\n     */\r\n    @Override\r\n    public void initialize(URL url, ResourceBundle rb) {\r\n        // --- Get the Firebase Auth instance ---\r\n        // This is a singleton instance from the main App class.\r\n        FirebaseAuth fAuth = App.fauth;\r\n\r\n        // --- Create a Timeline for a timed redirection ---\r\n        // A Timeline is a simple timer that performs an action after a specified duration.\r\n        // It's used here to ensure the user sees the splash screen before redirection.\r\n        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(SPLASH_DURATION_SECONDS), event -> {\r\n            // This code block runs after the 3-second delay.\r\n            try {\r\n                // --- Authentication Check Logic (The Corrected Approach) ---\r\n                // We check the UID stored in our custom global helper class (CurrUser).\r\n                // This UID is set by your login/registration controllers after a successful auth event.\r\n                String currentUserId = CurrUser.getUid();\r\n\r\n                if (currentUserId != null) {\r\n                    // --- Case 1: User is Logged In ---\r\n                    // If the UID is not null, it means a user is authenticated.\r\n                    logger.log(Level.INFO, \"User is already logged in with UID: \" + currentUserId + \". Redirecting to dashboard.\");\r\n                    // Redirect to your main app dashboard.\r\n                    App.setRoot(\"/files/landingscreen.fxml\"); // Using your new landingscreen FXML.\r\n                } else {\r\n                    // --- Case 2: No User is Logged In ---\r\n                    // If the UID is null, the user needs to sign in or register.\r\n                    logger.log(Level.INFO, \"No user is logged in. Redirecting to login screen.\");\r\n                    // Redirect to your login view FXML.\r\n                    App.setRoot(\"/files/login_screen.fxml\");\r\n                }\r\n\r\n            } catch (IOException ex) {\r\n                // Log any errors if the target FXML file cannot be loaded.\r\n                logger.log(Level.SEVERE, \"Failed to load a scene after authentication check.\", ex);\r\n                // Update the status label to inform the user of the error before exiting.\r\n                statusLabel.setText(\"Failed to load application. Please restart.\");\r\n            }\r\n        }));\r\n\r\n        // --- Start the animation and check ---\r\n        // This command starts the timer.\r\n        timeline.play();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java
+--- a/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java	(date 1751043954697)
+@@ -1,85 +1,32 @@
+ package com.example.csc325_firebase_webview_auth.view;
+ 
+-import com.google.firebase.auth.FirebaseAuth;
+-// The import for FirebaseUser is no longer needed since we are not using the client SDK.
+-// import com.google.firebase.auth.FirebaseUser; // REMOVE THIS LINE
+-import javafx.animation.KeyFrame;
+-import javafx.animation.Timeline;
++import javafx.event.ActionEvent;
+ import javafx.fxml.FXML;
+-import javafx.fxml.Initializable;
+-import javafx.scene.control.Label;
+-import javafx.util.Duration;
+-
+ import java.io.IOException;
+-import java.net.URL;
+-import java.util.ResourceBundle;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-import com.example.csc325_firebase_webview_auth.model.CurrUser; // Ensure this import is present
+ 
+-/**
+- * Controller for the authentication-aware splash screen.
+- * This class checks if a user is logged in using a custom session state mechanism
+- * and redirects the application to the appropriate view (dashboard or login).
+- */
+-public class SplashScreenController implements Initializable {
+-
+-    // --- FXML Injected Components ---
+-    // The statusLabel is used to provide feedback to the user during the check.
+-    @FXML private Label statusLabel;
+-
+-    // --- Constants ---
+-    // The duration the splash screen will be displayed before redirecting.
+-    private static final int SPLASH_DURATION_SECONDS = 3;
+-    private static final Logger logger = Logger.getLogger(SplashScreenController.class.getName());
++public class SplashScreenController {
+ 
+     /**
+-     * Initializes the controller after the FXML has been loaded.
+-     * This method sets up a timer to perform the authentication check and redirection.
+-     * @param url The location of the FXML file.
+-     * @param rb The resources.
++     * Handles the action for the Login button.
++     * @param event The ActionEvent that triggered this method.
++     * @throws IOException
+      */
+-    @Override
+-    public void initialize(URL url, ResourceBundle rb) {
+-        // --- Get the Firebase Auth instance ---
+-        // This is a singleton instance from the main App class.
+-        FirebaseAuth fAuth = App.fauth;
+-
+-        // --- Create a Timeline for a timed redirection ---
+-        // A Timeline is a simple timer that performs an action after a specified duration.
+-        // It's used here to ensure the user sees the splash screen before redirection.
+-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(SPLASH_DURATION_SECONDS), event -> {
+-            // This code block runs after the 3-second delay.
+-            try {
+-                // --- Authentication Check Logic (The Corrected Approach) ---
+-                // We check the UID stored in our custom global helper class (CurrUser).
+-                // This UID is set by your login/registration controllers after a successful auth event.
+-                String currentUserId = CurrUser.getUid();
+-
+-                if (currentUserId != null) {
+-                    // --- Case 1: User is Logged In ---
+-                    // If the UID is not null, it means a user is authenticated.
+-                    logger.log(Level.INFO, "User is already logged in with UID: " + currentUserId + ". Redirecting to dashboard.");
+-                    // Redirect to your main app dashboard.
+-                    App.setRoot("/files/landingscreen.fxml"); // Using your new landingscreen FXML.
+-                } else {
+-                    // --- Case 2: No User is Logged In ---
+-                    // If the UID is null, the user needs to sign in or register.
+-                    logger.log(Level.INFO, "No user is logged in. Redirecting to login screen.");
+-                    // Redirect to your login view FXML.
+-                    App.setRoot("/files/login_screen.fxml");
+-                }
++    @FXML
++    private void handleLoginButton(ActionEvent event) throws IOException {
++        // Here you will switch to the login form scene
++        System.out.println("Login button clicked! Switching to login form.");
++        App.setRoot("/files/LoginForm.fxml"); // You need to create this FXML file in the next step
++    }
+ 
+-            } catch (IOException ex) {
+-                // Log any errors if the target FXML file cannot be loaded.
+-                logger.log(Level.SEVERE, "Failed to load a scene after authentication check.", ex);
+-                // Update the status label to inform the user of the error before exiting.
+-                statusLabel.setText("Failed to load application. Please restart.");
+-            }
+-        }));
+-
+-        // --- Start the animation and check ---
+-        // This command starts the timer.
+-        timeline.play();
++    /**
++     * Handles the action for the Register button.
++     * @param event The ActionEvent that triggered this method.
++     * @throws IOException
++     */
++    @FXML
++    private void handleRegisterButton(ActionEvent event) throws IOException {
++        // Here you will switch to the registration form scene
++        System.out.println("Register button clicked! Switching to registration form.");
++        App.setRoot("/files/RegisterForm.fxml"); // You need to create this FXML file in the next step
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/App.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.csc325_firebase_webview_auth.view;\r\n\r\n\r\nimport com.example.csc325_firebase_webview_auth.model.FirestoreContext;\r\nimport com.google.cloud.firestore.Firestore;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport java.io.IOException;\r\nimport javafx.application.Application;\r\nimport javafx.fxml.FXMLLoader;\r\nimport javafx.scene.Parent;\r\nimport javafx.scene.Scene;\r\nimport javafx.stage.Stage;\r\n\r\n/**\r\n * JavaFX App\r\n */\r\npublic class App extends Application {\r\n\r\n    public static Firestore fstore;\r\n    public static FirebaseAuth fauth;\r\n    public static Scene scene;\r\n    private final FirestoreContext contxtFirebase = new FirestoreContext();\r\n\r\n    @Override\r\n    public void start(Stage primaryStage) throws Exception {\r\n        fstore = contxtFirebase.firebase();\r\n        fauth = FirebaseAuth.getInstance();\r\n        scene = new Scene(loadFXML(\"/files/AccessFBView.fxml\"));\r\n        primaryStage.setScene(scene);\r\n        primaryStage.show();\r\n    }\r\n\r\n    public static void setRoot(String fxml) throws IOException {\r\n        scene.setRoot(loadFXML(fxml));\r\n    }\r\n\r\n    private static Parent loadFXML(String fxml) throws IOException {\r\n        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml ));\r\n        return fxmlLoader.load();\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        launch(args);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java
+--- a/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java	(date 1751041053151)
+@@ -5,6 +5,8 @@
+ import com.google.cloud.firestore.Firestore;
+ import com.google.firebase.auth.FirebaseAuth;
+ import java.io.IOException;
++import java.util.concurrent.Executor;
++
+ import javafx.application.Application;
+ import javafx.fxml.FXMLLoader;
+ import javafx.scene.Parent;
+@@ -19,13 +21,14 @@
+     public static Firestore fstore;
+     public static FirebaseAuth fauth;
+     public static Scene scene;
++    public static Executor executorService;
+     private final FirestoreContext contxtFirebase = new FirestoreContext();
+ 
+     @Override
+     public void start(Stage primaryStage) throws Exception {
+         fstore = contxtFirebase.firebase();
+         fauth = FirebaseAuth.getInstance();
+-        scene = new Scene(loadFXML("/files/AccessFBView.fxml"));
++        scene = new Scene(loadFXML("/files/SplashScreen.fxml"));
+         primaryStage.setScene(scene);
+         primaryStage.show();
+     }
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.csc325_firebase_webview_auth.view;//package modelview;\r\n\r\nimport com.example.csc325_firebase_webview_auth.model.Person;\r\nimport com.example.csc325_firebase_webview_auth.viewmodel.AccessDataViewModel;\r\nimport com.google.api.core.ApiFuture;\r\nimport com.google.cloud.firestore.DocumentReference;\r\nimport com.google.cloud.firestore.QueryDocumentSnapshot;\r\nimport com.google.cloud.firestore.QuerySnapshot;\r\nimport com.google.cloud.firestore.WriteResult;\r\nimport com.google.firebase.auth.FirebaseAuthException;\r\nimport com.google.firebase.auth.UserRecord;\r\n\r\nimport java.io.IOException;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\nimport java.util.UUID;\r\nimport java.util.concurrent.ExecutionException;\r\n\r\nimport javafx.collections.FXCollections;\r\nimport javafx.collections.ObservableList;\r\nimport javafx.event.ActionEvent;\r\nimport javafx.fxml.FXML;\r\nimport javafx.scene.control.Button;\r\nimport javafx.scene.control.TextArea;\r\nimport javafx.scene.control.TextField;\r\n\r\npublic class AccessFBView {\r\n\r\n\r\n     @FXML\r\n    private TextField nameField;\r\n    @FXML\r\n    private TextField majorField;\r\n    @FXML\r\n    private TextField ageField;\r\n    @FXML\r\n    private Button writeButton;\r\n    @FXML\r\n    private Button readButton;\r\n    @FXML\r\n    private TextArea outputField;\r\n     private boolean key;\r\n    private ObservableList<Person> listOfUsers = FXCollections.observableArrayList();\r\n    private Person person;\r\n    public ObservableList<Person> getListOfUsers() {\r\n        return listOfUsers;\r\n    }\r\n\r\n    void initialize() {\r\n\r\n        AccessDataViewModel accessDataViewModel = new AccessDataViewModel();\r\n        nameField.textProperty().bindBidirectional(accessDataViewModel.userNameProperty());\r\n        majorField.textProperty().bindBidirectional(accessDataViewModel.userMajorProperty());\r\n        writeButton.disableProperty().bind(accessDataViewModel.isWritePossibleProperty().not());\r\n    }\r\n\r\n    @FXML\r\n    private void addRecord(ActionEvent event) {\r\n        addData();\r\n    }\r\n\r\n        @FXML\r\n    private void readRecord(ActionEvent event) {\r\n        readFirebase();\r\n    }\r\n\r\n            @FXML\r\n    private void regRecord(ActionEvent event) {\r\n        registerUser();\r\n    }\r\n\r\n     @FXML\r\n    private void switchToSecondary() throws IOException {\r\n        App.setRoot(\"/files/WebContainer.fxml\");\r\n    }\r\n\r\n    public void addData() {\r\n\r\n        DocumentReference docRef = App.fstore.collection(\"References\").document(UUID.randomUUID().toString());\r\n\r\n        Map<String, Object> data = new HashMap<>();\r\n        data.put(\"Name\", nameField.getText());\r\n        data.put(\"Major\", majorField.getText());\r\n        data.put(\"Age\", Integer.parseInt(ageField.getText()));\r\n        //asynchronously write data\r\n        ApiFuture<WriteResult> result = docRef.set(data);\r\n    }\r\n\r\n        public boolean readFirebase()\r\n         {\r\n             key = false;\r\n\r\n        //asynchronously retrieve all documents\r\n        ApiFuture<QuerySnapshot> future =  App.fstore.collection(\"References\").get();\r\n        // future.get() blocks on response\r\n        List<QueryDocumentSnapshot> documents;\r\n        try\r\n        {\r\n            documents = future.get().getDocuments();\r\n            if(documents.size()>0)\r\n            {\r\n                System.out.println(\"Outing....\");\r\n                for (QueryDocumentSnapshot document : documents)\r\n                {\r\n                    outputField.setText(outputField.getText()+ document.getData().get(\"Name\")+ \" , Major: \"+\r\n                            document.getData().get(\"Major\")+ \" , Age: \"+\r\n                            document.getData().get(\"Age\")+ \" \\n \");\r\n                    System.out.println(document.getId() + \" => \" + document.getData().get(\"Name\"));\r\n                    person  = new Person(String.valueOf(document.getData().get(\"Name\")),\r\n                            document.getData().get(\"Major\").toString(),\r\n                            Integer.parseInt(document.getData().get(\"Age\").toString()));\r\n                    listOfUsers.add(person);\r\n                }\r\n            }\r\n            else\r\n            {\r\n               System.out.println(\"No data\");\r\n            }\r\n            key=true;\r\n\r\n        }\r\n        catch (InterruptedException | ExecutionException ex)\r\n        {\r\n             ex.printStackTrace();\r\n        }\r\n        return key;\r\n    }\r\n\r\n        public void sendVerificationEmail() {\r\n        try {\r\n            UserRecord user = App.fauth.getUser(\"name\");\r\n            //String url = user.getPassword();\r\n\r\n        } catch (Exception e) {\r\n        }\r\n    }\r\n\r\n    public boolean registerUser() {\r\n        UserRecord.CreateRequest request = new UserRecord.CreateRequest()\r\n                .setEmail(\"user@example.com\")\r\n                .setEmailVerified(false)\r\n                .setPassword(\"secretPassword\")\r\n                .setPhoneNumber(\"+11234567890\")\r\n                .setDisplayName(\"John Doe\")\r\n                .setDisabled(false);\r\n\r\n        UserRecord userRecord;\r\n        try {\r\n            userRecord = App.fauth.createUser(request);\r\n            System.out.println(\"Successfully created new user: \" + userRecord.getUid());\r\n            return true;\r\n\r\n        } catch (FirebaseAuthException ex) {\r\n           // Logger.getLogger(FirestoreContext.class.getName()).log(Level.SEVERE, null, ex);\r\n            return false;\r\n        }\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java
+--- a/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java	(date 1751058024249)
+@@ -1,4 +1,7 @@
+-package com.example.csc325_firebase_webview_auth.view;//package modelview;
++package com.example.csc325_firebase_webview_auth.view;
++
++// Make sure this import is present at the top of your file
++import com.google.firebase.auth.FirebaseAuth;
+ 
+ import com.example.csc325_firebase_webview_auth.model.Person;
+ import com.example.csc325_firebase_webview_auth.viewmodel.AccessDataViewModel;
+@@ -21,14 +24,12 @@
+ import javafx.collections.ObservableList;
+ import javafx.event.ActionEvent;
+ import javafx.fxml.FXML;
+-import javafx.scene.control.Button;
+-import javafx.scene.control.TextArea;
+-import javafx.scene.control.TextField;
++import javafx.scene.control.*;
++import javafx.scene.control.cell.PropertyValueFactory;
+ 
+ public class AccessFBView {
+ 
+-
+-     @FXML
++    @FXML
+     private TextField nameField;
+     @FXML
+     private TextField majorField;
+@@ -40,19 +41,32 @@
+     private Button readButton;
+     @FXML
+     private TextArea outputField;
+-     private boolean key;
++    private boolean key;
+     private ObservableList<Person> listOfUsers = FXCollections.observableArrayList();
+     private Person person;
++
++    @FXML
++    private TableView<Person> tableView;
++    @FXML
++    private TableColumn<Person, String> nameColumn;
++    @FXML
++    private TableColumn<Person, String> majorColumn;
++    @FXML
++    private TableColumn<Person, Integer> ageColumn;
+     public ObservableList<Person> getListOfUsers() {
+         return listOfUsers;
+     }
+ 
+     void initialize() {
+-
+         AccessDataViewModel accessDataViewModel = new AccessDataViewModel();
+         nameField.textProperty().bindBidirectional(accessDataViewModel.userNameProperty());
+         majorField.textProperty().bindBidirectional(accessDataViewModel.userMajorProperty());
+         writeButton.disableProperty().bind(accessDataViewModel.isWritePossibleProperty().not());
++        // --- NEW CODE: Initialize the TableView columns ---
++        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
++        majorColumn.setCellValueFactory(new PropertyValueFactory<>("major"));
++        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
++        // --- END NEW CODE ---
+     }
+ 
+     @FXML
+@@ -60,25 +74,69 @@
+         addData();
+     }
+ 
+-        @FXML
++    @FXML
+     private void readRecord(ActionEvent event) {
+         readFirebase();
+     }
+ 
+-            @FXML
++    @FXML
+     private void regRecord(ActionEvent event) {
+         registerUser();
+     }
+ 
+-     @FXML
++    @FXML
+     private void switchToSecondary() throws IOException {
+         App.setRoot("/files/WebContainer.fxml");
+     }
+ 
++    /**
++     * Handles the logout action from the menu.
++     * Signs out the user and redirects to the splash screen.
++     * @param event The action event.
++     */
++    @FXML
++    private void handleLogout(ActionEvent event) throws InterruptedException {
++        // Sign out the user from Firebase Authentication
++        // This is a synchronous call in the Admin SDK
++        App.fauth.wait();
++        System.out.println("User signed out.");
++
++        // Redirect to the splash screen
++        try {
++            App.setRoot("/files/SplashScreen.fxml");
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++    }
++    @FXML
++    private void handleEditUser(ActionEvent event) {
++        // Implement logic to edit user data, e.g., open a dialog or enable text fields
++        System.out.println("Edit User menu item clicked.");
++        // Example: logic to enable editing of fields
++        // nameField.setEditable(true);
++        // majorField.setEditable(true);
++        // ageField.setEditable(true);
++    }
++
++    @FXML
++    private void handleViewProfile(ActionEvent event) {
++        // You can switch to a dedicated profile scene here.
++        // For now, let's just print a message.
++        System.out.println("View Profile menu item clicked.");
++        // Example: App.setRoot("/files/ProfileView.fxml");
++    }
++
++    @FXML
++    private void handleUploadPicture(ActionEvent event) {
++        // You would implement the logic to upload a picture to Firebase Storage here.
++        System.out.println("Upload Picture menu item clicked.");
++        // Example: open a file chooser and upload the selected file
++    }
++
++
++
+     public void addData() {
+-
+         DocumentReference docRef = App.fstore.collection("References").document(UUID.randomUUID().toString());
+-
+         Map<String, Object> data = new HashMap<>();
+         data.put("Name", nameField.getText());
+         data.put("Major", majorField.getText());
+@@ -87,51 +145,53 @@
+         ApiFuture<WriteResult> result = docRef.set(data);
+     }
+ 
+-        public boolean readFirebase()
+-         {
+-             key = false;
++    public boolean readFirebase() {
++        key = false;
+ 
+-        //asynchronously retrieve all documents
+-        ApiFuture<QuerySnapshot> future =  App.fstore.collection("References").get();
+-        // future.get() blocks on response
++        // Asynchronously retrieve all documents
++        ApiFuture<QuerySnapshot> future = App.fstore.collection("References").get();
+         List<QueryDocumentSnapshot> documents;
+-        try
+-        {
++        try {
+             documents = future.get().getDocuments();
+-            if(documents.size()>0)
+-            {
++
++            // --- NEW CODE: Clear the list and the TextArea ---
++            listOfUsers.clear();
++            outputField.setText(""); // Clear the TextArea for a clean output
++            // --- END NEW CODE ---
++
++            if (documents.size() > 0) {
+                 System.out.println("Outing....");
+-                for (QueryDocumentSnapshot document : documents)
+-                {
+-                    outputField.setText(outputField.getText()+ document.getData().get("Name")+ " , Major: "+
+-                            document.getData().get("Major")+ " , Age: "+
+-                            document.getData().get("Age")+ " \n ");
++                for (QueryDocumentSnapshot document : documents) {
++                    // --- OLD CODE: Commented out to redirect output to TableView ---
++                    // outputField.setText(outputField.getText() + document.getData().get("Name") + " , Major: " +
++                    //         document.getData().get("Major") + " , Age: " +
++                    //         document.getData().get("Age") + " \n ");
++                    // --- END OLD CODE ---
++
+                     System.out.println(document.getId() + " => " + document.getData().get("Name"));
+-                    person  = new Person(String.valueOf(document.getData().get("Name")),
++                    person = new Person(String.valueOf(document.getData().get("Name")),
+                             document.getData().get("Major").toString(),
+                             Integer.parseInt(document.getData().get("Age").toString()));
+                     listOfUsers.add(person);
+                 }
+-            }
+-            else
+-            {
+-               System.out.println("No data");
++            } else {
++                System.out.println("No data");
+             }
+-            key=true;
++            key = true;
+ 
+-        }
+-        catch (InterruptedException | ExecutionException ex)
+-        {
+-             ex.printStackTrace();
++            // --- NEW CODE: Populate the TableView with the list ---
++            tableView.setItems(listOfUsers);
++            // --- END NEW CODE ---
++
++        } catch (InterruptedException | ExecutionException ex) {
++            ex.printStackTrace();
+         }
+         return key;
+     }
+ 
+-        public void sendVerificationEmail() {
++    public void sendVerificationEmail() {
+         try {
+             UserRecord user = App.fauth.getUser("name");
+-            //String url = user.getPassword();
+-
+         } catch (Exception e) {
+         }
+     }
+@@ -150,11 +210,9 @@
+             userRecord = App.fauth.createUser(request);
+             System.out.println("Successfully created new user: " + userRecord.getUid());
+             return true;
+-
+         } catch (FirebaseAuthException ex) {
+-           // Logger.getLogger(FirestoreContext.class.getName()).log(Level.SEVERE, null, ex);
++            // Logger.getLogger(FirestoreContext.class.getName()).log(Level.SEVERE, null, ex);
+             return false;
+         }
+-
+     }
+-}
++}
+\ No newline at end of file
+Index: src/main/resources/files/AccessFBView.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.geometry.Insets?>\r\n<?import javafx.scene.control.Button?>\r\n<?import javafx.scene.control.Menu?>\r\n<?import javafx.scene.control.MenuBar?>\r\n<?import javafx.scene.control.MenuItem?>\r\n<?import javafx.scene.control.TableColumn?>\r\n<?import javafx.scene.control.TableView?>\r\n<?import javafx.scene.control.TextArea?>\r\n<?import javafx.scene.control.TextField?>\r\n<?import javafx.scene.effect.InnerShadow?>\r\n<?import javafx.scene.image.Image?>\r\n<?import javafx.scene.image.ImageView?>\r\n<?import javafx.scene.layout.AnchorPane?>\r\n<?import javafx.scene.layout.HBox?>\r\n<?import javafx.scene.layout.VBox?>\r\n<?import javafx.scene.paint.Color?>\r\n\r\n<AnchorPane prefHeight=\"571.0\" prefWidth=\"894.0\" xmlns=\"http://javafx.com/javafx/20.0.1\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller=\"com.example.csc325_firebase_webview_auth.view.AccessFBView\">\r\n   <children>\r\n      <MenuBar layoutY=\"1.0\" prefHeight=\"27.0\" prefWidth=\"894.0\">\r\n        <menus>\r\n          <Menu mnemonicParsing=\"false\" text=\"File\">\r\n            <items>\r\n                  <MenuItem mnemonicParsing=\"false\" text=\"Register\" />\r\n              <MenuItem mnemonicParsing=\"false\" text=\"Close\" />\r\n            </items>\r\n          </Menu>\r\n          <Menu mnemonicParsing=\"false\" text=\"Edit\">\r\n            <items>\r\n              <MenuItem mnemonicParsing=\"false\" text=\"Delete\" />\r\n            </items>\r\n          </Menu>\r\n          <Menu mnemonicParsing=\"false\" text=\"Help\">\r\n            <items>\r\n              <MenuItem mnemonicParsing=\"false\" text=\"About\" />\r\n            </items>\r\n          </Menu>\r\n        </menus>\r\n      </MenuBar>\r\n      <HBox layoutX=\"6.0\" layoutY=\"28.0\" prefHeight=\"535.0\" prefWidth=\"880.0\">\r\n         <children>\r\n            <AnchorPane prefHeight=\"200.0\" prefWidth=\"200.0\">\r\n               <children>\r\n                  <ImageView fitHeight=\"150.0\" fitWidth=\"129.0\" layoutX=\"17.0\" layoutY=\"14.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                     <effect>\r\n                        <InnerShadow>\r\n                           <color>\r\n                              <Color red=\"0.20652228593826294\" green=\"0.1679999977350235\" blue=\"0.6000000238418579\" />\r\n                           </color>\r\n                        </InnerShadow>\r\n                     </effect>\r\n                     <image>\r\n                        <Image url=\"@profile_empty.png\" />\r\n                     </image>\r\n                  </ImageView>\r\n               </children>\r\n            </AnchorPane>\r\n            <VBox prefHeight=\"535.0\" prefWidth=\"551.0\">\r\n               <children>\r\n                  <TextArea fx:id=\"outputField\" prefHeight=\"184.0\" prefWidth=\"514.0\" />\r\n                  <TableView prefHeight=\"351.0\" prefWidth=\"514.0\">\r\n                    <columns>\r\n                      <TableColumn prefWidth=\"75.0\" text=\"C1\" />\r\n                      <TableColumn prefWidth=\"75.0\" text=\"C2\" />\r\n                    </columns>\r\n                  </TableView>\r\n               </children>\r\n            </VBox>\r\n            <VBox prefHeight=\"535.0\" prefWidth=\"241.0\" spacing=\"10.0\">\r\n               <children>\r\n                  <TextField fx:id=\"nameField\" alignment=\"TOP_LEFT\" prefHeight=\"25.0\" prefWidth=\"272.0\" promptText=\"Name\" />\r\n                  <TextField fx:id=\"majorField\" promptText=\"Major\" />\r\n                  <TextField fx:id=\"ageField\" promptText=\"Age\" />\r\n                  <HBox prefHeight=\"32.0\" prefWidth=\"465.0\">\r\n                     <children>\r\n                        <Button fx:id=\"readButton\" mnemonicParsing=\"false\" onAction=\"#readRecord\" prefHeight=\"25.0\" prefWidth=\"123.0\" text=\"Read\" textAlignment=\"CENTER\">\r\n                           <HBox.margin>\r\n                              <Insets left=\"20.0\" right=\"20.0\" />\r\n                           </HBox.margin>\r\n                        </Button>\r\n                        <Button fx:id=\"writeButton\" mnemonicParsing=\"false\" onAction=\"#addRecord\" prefHeight=\"25.0\" prefWidth=\"128.0\" text=\"Write\" textAlignment=\"CENTER\">\r\n                           <HBox.margin>\r\n                              <Insets left=\"20.0\" right=\"20.0\" />\r\n                           </HBox.margin>\r\n                        </Button>\r\n                     </children>\r\n                  </HBox>\r\n                  <Button fx:id=\"switchroot\" mnemonicParsing=\"false\" onAction=\"#switchToSecondary\" prefHeight=\"25.0\" prefWidth=\"283.0\" text=\"Switch\" textAlignment=\"CENTER\" />\r\n               </children>\r\n               <padding>\r\n                  <Insets bottom=\"10.0\" left=\"10.0\" right=\"10.0\" top=\"10.0\" />\r\n               </padding>\r\n            </VBox>\r\n         </children>\r\n      </HBox>\r\n   </children>\r\n   <opaqueInsets>\r\n      <Insets />\r\n   </opaqueInsets>\r\n</AnchorPane>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/files/AccessFBView.fxml b/src/main/resources/files/AccessFBView.fxml
+--- a/src/main/resources/files/AccessFBView.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/src/main/resources/files/AccessFBView.fxml	(date 1751057839360)
+@@ -17,86 +17,99 @@
+ <?import javafx.scene.layout.VBox?>
+ <?import javafx.scene.paint.Color?>
+ 
++<?import java.net.URL?>
+ <AnchorPane prefHeight="571.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.AccessFBView">
+-   <children>
+-      <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="894.0">
+-        <menus>
+-          <Menu mnemonicParsing="false" text="File">
+-            <items>
+-                  <MenuItem mnemonicParsing="false" text="Register" />
+-              <MenuItem mnemonicParsing="false" text="Close" />
+-            </items>
+-          </Menu>
+-          <Menu mnemonicParsing="false" text="Edit">
+-            <items>
+-              <MenuItem mnemonicParsing="false" text="Delete" />
+-            </items>
+-          </Menu>
+-          <Menu mnemonicParsing="false" text="Help">
+-            <items>
+-              <MenuItem mnemonicParsing="false" text="About" />
+-            </items>
+-          </Menu>
+-        </menus>
+-      </MenuBar>
+-      <HBox layoutX="6.0" layoutY="28.0" prefHeight="535.0" prefWidth="880.0">
+-         <children>
+-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+-               <children>
+-                  <ImageView fitHeight="150.0" fitWidth="129.0" layoutX="17.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+-                     <effect>
+-                        <InnerShadow>
+-                           <color>
+-                              <Color red="0.20652228593826294" green="0.1679999977350235" blue="0.6000000238418579" />
+-                           </color>
+-                        </InnerShadow>
+-                     </effect>
+-                     <image>
+-                        <Image url="@profile_empty.png" />
+-                     </image>
+-                  </ImageView>
+-               </children>
+-            </AnchorPane>
+-            <VBox prefHeight="535.0" prefWidth="551.0">
+-               <children>
+-                  <TextArea fx:id="outputField" prefHeight="184.0" prefWidth="514.0" />
+-                  <TableView prefHeight="351.0" prefWidth="514.0">
+-                    <columns>
+-                      <TableColumn prefWidth="75.0" text="C1" />
+-                      <TableColumn prefWidth="75.0" text="C2" />
+-                    </columns>
+-                  </TableView>
+-               </children>
+-            </VBox>
+-            <VBox prefHeight="535.0" prefWidth="241.0" spacing="10.0">
+-               <children>
+-                  <TextField fx:id="nameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="272.0" promptText="Name" />
+-                  <TextField fx:id="majorField" promptText="Major" />
+-                  <TextField fx:id="ageField" promptText="Age" />
+-                  <HBox prefHeight="32.0" prefWidth="465.0">
+-                     <children>
+-                        <Button fx:id="readButton" mnemonicParsing="false" onAction="#readRecord" prefHeight="25.0" prefWidth="123.0" text="Read" textAlignment="CENTER">
+-                           <HBox.margin>
+-                              <Insets left="20.0" right="20.0" />
+-                           </HBox.margin>
+-                        </Button>
+-                        <Button fx:id="writeButton" mnemonicParsing="false" onAction="#addRecord" prefHeight="25.0" prefWidth="128.0" text="Write" textAlignment="CENTER">
+-                           <HBox.margin>
+-                              <Insets left="20.0" right="20.0" />
+-                           </HBox.margin>
+-                        </Button>
+-                     </children>
+-                  </HBox>
+-                  <Button fx:id="switchroot" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="25.0" prefWidth="283.0" text="Switch" textAlignment="CENTER" />
+-               </children>
+-               <padding>
+-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+-               </padding>
+-            </VBox>
+-         </children>
+-      </HBox>
+-   </children>
+-   <opaqueInsets>
+-      <Insets />
+-   </opaqueInsets>
+-</AnchorPane>
++    <stylesheets>
++        <URL value="@/files/style.css" />
++    </stylesheets>
++    <children>
++        <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="894.0">
++            <menus>
++                <Menu mnemonicParsing="false" text="File">
++                    <items>
++                        <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
++                        <MenuItem mnemonicParsing="false" text="Register" />
++                        <MenuItem mnemonicParsing="false" text="Close" />
++                    </items>
++                </Menu>
++                <Menu mnemonicParsing="false" text="Edit">
++                    <items>
++                        <MenuItem mnemonicParsing="false" text="Delete" />
++                        <MenuItem mnemonicParsing="false" onAction="#handleEditUser" text="Edit User" />
++                    </items>
++                </Menu>
++                <Menu mnemonicParsing="false" text="Profile">
++                    <items>
++                        <MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View Profile" />
++                        <MenuItem mnemonicParsing="false" onAction="#handleUploadPicture" text="Upload Picture" />
++                    </items>
++                </Menu>
++                <Menu mnemonicParsing="false" text="Help">
++                    <items>
++                        <MenuItem mnemonicParsing="false" text="About" />
++                    </items>
++                </Menu>
++            </menus>
++        </MenuBar>
++        <HBox layoutX="6.0" layoutY="28.0" prefHeight="535.0" prefWidth="880.0">
++            <children>
++                <AnchorPane prefHeight="200.0" prefWidth="200.0">
++                    <children>
++                        <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="129.0" layoutX="17.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
++                            <effect>
++                                <InnerShadow>
++                                    <color>
++                                        <Color red="0.20652228593826294" green="0.1679999977350235" blue="0.6000000238418579" />
++                                    </color>
++                                </InnerShadow>
++                            </effect>
++                            <image>
++                                <Image url="@profile_empty.png" />
++                            </image>
++                        </ImageView>
++                    </children>
++                </AnchorPane>
++                <VBox prefHeight="535.0" prefWidth="551.0">
++                    <children>
++                        <TextArea fx:id="outputField" prefHeight="184.0" prefWidth="514.0" />
++                        <TableView prefHeight="351.0" prefWidth="514.0">
++                            <columns>
++                                <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
++                                <TableColumn fx:id="majorColumn" prefWidth="180.0" text="Major" />
++                                <TableColumn fx:id="ageColumn" prefWidth="80.0" text="Age" />
++                            </columns>
++                        </TableView>
++                    </children>
++                </VBox>
++                <VBox prefHeight="535.0" prefWidth="241.0" spacing="10.0">
++                    <children>
++                        <TextField fx:id="nameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="272.0" promptText="Name" />
++                        <TextField fx:id="majorField" promptText="Major" />
++                        <TextField fx:id="ageField" promptText="Age" />
++                        <HBox prefHeight="32.0" prefWidth="465.0">
++                            <children>
++                                <Button fx:id="readButton" mnemonicParsing="false" onAction="#readRecord" prefHeight="25.0" prefWidth="123.0" text="Read" textAlignment="CENTER">
++                                    <HBox.margin>
++                                        <Insets left="20.0" right="20.0" />
++                                    </HBox.margin>
++                                </Button>
++                                <Button fx:id="writeButton" mnemonicParsing="false" onAction="#addRecord" prefHeight="25.0" prefWidth="128.0" text="Write" textAlignment="CENTER">
++                                    <HBox.margin>
++                                        <Insets left="20.0" right="20.0" />
++                                    </HBox.margin>
++                                </Button>
++                            </children>
++                        </HBox>
++                        <Button fx:id="switchroot" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="25.0" prefWidth="283.0" text="Switch" textAlignment="CENTER" />
++                    </children>
++                    <padding>
++                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
++                    </padding>
++                </VBox>
++            </children>
++        </HBox>
++    </children>
++    <opaqueInsets>
++        <Insets />
++    </opaqueInsets>
++</AnchorPane>
+\ No newline at end of file
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n\r\n    <groupId>com.example</groupId>\r\n    <artifactId>CSC325_Firebase_webview_Auth</artifactId>\r\n    <version>1.0-SNAPSHOT</version>\r\n    <name>CSC325_Firebase_webview_Auth</name>\r\n\r\n    <properties>\r\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\r\n        <junit.version>5.9.2</junit.version>\r\n    </properties>\r\n\r\n    <dependencies>\r\n        <dependency>\r\n            <groupId>org.openjfx</groupId>\r\n            <artifactId>javafx-controls</artifactId>\r\n            <version>17.0.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.openjfx</groupId>\r\n            <artifactId>javafx-fxml</artifactId>\r\n            <version>17.0.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.openjfx</groupId>\r\n            <artifactId>javafx-web</artifactId>\r\n            <version>17.0.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.google.firebase</groupId>\r\n            <artifactId>firebase-admin</artifactId>\r\n            <version>9.2.0</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.junit.jupiter</groupId>\r\n            <artifactId>junit-jupiter-api</artifactId>\r\n            <version>${junit.version}</version>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.junit.jupiter</groupId>\r\n            <artifactId>junit-jupiter-engine</artifactId>\r\n            <version>${junit.version}</version>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.slf4j</groupId>\r\n            <artifactId>slf4j-api</artifactId>\r\n            <version>2.0.12</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.rationalityfrontline.workaround</groupId>\r\n            <artifactId>jfoenix</artifactId>\r\n            <version>17.0.5</version>\r\n        </dependency>\r\n        <!--<dependency>\r\n            <groupId>com.jfoenix</groupId>\r\n            <artifactId>jfoenix</artifactId>\r\n            <version>9.0.10</version>\r\n        </dependency>-->\r\n        <dependency>\r\n            <groupId>com.google.cloud</groupId>\r\n            <artifactId>google-cloud-firestore</artifactId>\r\n            <version>3.7.10</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.google.auth</groupId>\r\n            <artifactId>google-auth-library-oauth2-http</artifactId>\r\n            <version>1.17.0</version>\r\n\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.google.cloud</groupId>\r\n            <artifactId>google-cloud-core</artifactId>\r\n            <version>2.8.20</version>\r\n        </dependency>\r\n\r\n    </dependencies>\r\n\r\n    <build>\r\n        <plugins>\r\n            <plugin>\r\n                <groupId>org.apache.maven.plugins</groupId>\r\n                <artifactId>maven-compiler-plugin</artifactId>\r\n                <version>3.11.0</version>\r\n                <configuration>\r\n                    <source>17</source>\r\n                    <target>17</target>\r\n                </configuration>\r\n            </plugin>\r\n            <plugin>\r\n                <groupId>org.openjfx</groupId>\r\n                <artifactId>javafx-maven-plugin</artifactId>\r\n                <version>0.0.8</version>\r\n                <executions>\r\n                    <execution>\r\n                        <!-- Default configuration for running with: mvn clean javafx:run -->\r\n                        <id>default-cli</id>\r\n                        <configuration>\r\n                            <mainClass>\r\n                                com.example.csc325_firebase_webview_auth/com.example.csc325_firebase_webview_auth.view.App\r\n                            </mainClass>\r\n                            <launcher>app</launcher>\r\n                            <jlinkZipName>app</jlinkZipName>\r\n                            <jlinkImageName>app</jlinkImageName>\r\n                            <noManPages>true</noManPages>\r\n                            <stripDebug>true</stripDebug>\r\n                            <noHeaderFiles>true</noHeaderFiles>\r\n                        </configuration>\r\n                    </execution>\r\n                </executions>\r\n            </plugin>\r\n        </plugins>\r\n    </build>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/pom.xml	(date 1751052126936)
+@@ -12,29 +12,62 @@
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+         <junit.version>5.9.2</junit.version>
++        <javafx.version>22.0.1</javafx.version>
+     </properties>
+ 
+     <dependencies>
++        <dependency>
++            <groupId>com.google.firebase</groupId>
++            <artifactId>firebase-admin</artifactId>
++            <version>9.5.0</version>
++        </dependency>
++
++        <dependency>
++            <groupId>com.google.cloud</groupId>
++            <artifactId>google-cloud-firestore</artifactId>
++            <version>3.31.6</version>
++        </dependency>
++
++        <dependency>
++            <groupId>com.google.auth</groupId>
++            <artifactId>google-auth-library-oauth2-http</artifactId>
++            <version>1.37.1</version>
++        </dependency>
++
++        <dependency>
++            <groupId>com.google.cloud</groupId>
++            <artifactId>google-cloud-core</artifactId>
++            <version>2.57.2</version>
++        </dependency>
++
+         <dependency>
+             <groupId>org.openjfx</groupId>
+             <artifactId>javafx-controls</artifactId>
+-            <version>17.0.2</version>
++            <version>${javafx.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>org.openjfx</groupId>
+             <artifactId>javafx-fxml</artifactId>
+-            <version>17.0.2</version>
++            <version>${javafx.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>org.openjfx</groupId>
+             <artifactId>javafx-web</artifactId>
+-            <version>17.0.2</version>
++            <version>${javafx.version}</version>
+         </dependency>
++
+         <dependency>
+-            <groupId>com.google.firebase</groupId>
+-            <artifactId>firebase-admin</artifactId>
+-            <version>9.2.0</version>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-api</artifactId>
++            <version>2.0.17</version>
++        </dependency>
++
++        <dependency>
++            <groupId>com.jfoenix</groupId>
++            <artifactId>jfoenix</artifactId>
++            <version>9.0.10</version>
+         </dependency>
++
+         <dependency>
+             <groupId>org.junit.jupiter</groupId>
+             <artifactId>junit-jupiter-api</artifactId>
+@@ -47,41 +80,22 @@
+             <version>${junit.version}</version>
+             <scope>test</scope>
+         </dependency>
+-        <dependency>
+-            <groupId>org.slf4j</groupId>
+-            <artifactId>slf4j-api</artifactId>
+-            <version>2.0.12</version>
+-        </dependency>
+-        <dependency>
+-            <groupId>org.rationalityfrontline.workaround</groupId>
+-            <artifactId>jfoenix</artifactId>
+-            <version>17.0.5</version>
+-        </dependency>
+-        <!--<dependency>
+-            <groupId>com.jfoenix</groupId>
+-            <artifactId>jfoenix</artifactId>
+-            <version>9.0.10</version>
+-        </dependency>-->
+-        <dependency>
+-            <groupId>com.google.cloud</groupId>
+-            <artifactId>google-cloud-firestore</artifactId>
+-            <version>3.7.10</version>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.google.auth</groupId>
+-            <artifactId>google-auth-library-oauth2-http</artifactId>
+-            <version>1.17.0</version>
+-
+-        </dependency>
+-        <dependency>
+-            <groupId>com.google.cloud</groupId>
+-            <artifactId>google-cloud-core</artifactId>
+-            <version>2.8.20</version>
+-        </dependency>
+-
+     </dependencies>
+ 
+     <build>
++        <resources>
++            <resource>
++                <directory>src/main/resources</directory>
++                <includes>
++                    <include>**/*.css</include>
++                    <include>**/*.fxml</include>
++                    <include>**/*.png</include>
++                    <include>**/*.jpg</include>
++                    <include>**/*.html</include>
++                    <include>**/*.json</include>
++                </includes>
++            </resource>
++        </resources>
+         <plugins>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+@@ -98,7 +112,6 @@
+                 <version>0.0.8</version>
+                 <executions>
+                     <execution>
+-                        <!-- Default configuration for running with: mvn clean javafx:run -->
+                         <id>default-cli</id>
+                         <configuration>
+                             <mainClass>
+Index: src/main/resources/files/key.json
+===================================================================
+diff --git a/src/main/resources/files/key.json b/src/main/resources/files/key.json
+deleted file mode 100644
+--- a/src/main/resources/files/key.json	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,13 +0,0 @@
+-{
+-  "type": "service_account",
+-  "project_id": "csc325firjava",
+-  "private_key_id": "733fcf7aa3b2379231f4522b493dcbf129af5057",
+-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDKqdqs2VsvPvD4\nrJspsvozaOxFdTjqKhDEhBuqLtkulU4XpCsE6CLg/oqq2VC7p7Z6D6F854PQ6GMp\n/4bBrdfz8qjpE+ce3Qu/fBCSVZq2kiZ/oUsr65VGkLyi71uAX3zCFhLGVrjLUH5l\n9MlHQU451SQEOErz4Gmf4GdxnyqcTFJV3vqDPkattxZASKM5qPmTcFVwOn+Sx07j\nU4n15pO/G/AKR/hg/8fUEgAD1BsGoBI9aPRpsRPVcgMOEiHycP1RwtdyXVNpGfO1\nqd4n6OAOAx1NwHiU0L//qr2Yw6mvyMIx56S+etjvmTqntPAd8c/VzlKPJ2eg1cye\n5wB7WbSnAgMBAAECggEACOvjQXqsBe9qYjgO+I31b6/tvr0DTWOeq1f5c8tuKhvO\nfUHv1t51Mpxh9FVutWQTp1nqzPnQFrE0NFQYVYxWllmXT/NdWEF40+wdOqPkFKdo\nZHPwQDW1s46Jj06kI4mQj2azWuHUbrbTaZ+WALoCPI+Cb2EfA49cdvpE836DPLAX\nXe3rDiqR0u62zw+hB/AxXnwOkR+h5pP7RaPJXrszSdATfHEODQM+8yuzNGKOzlfx\n88dbnIFUhnQWtm4osWPo2mp3Ldjhn8BOKrSvsvFj14msa71/mBn7R5w/884rwe+J\nfWr/sQO1bIFPUCg+vmDC4ZcSKV4RbGZVaNGtzk7sOQKBgQDkIRe0X3V5qEetsceP\nQPsENnmx4hYbMklxgJR480Nh20YtsW9BVdZGuMIrjfhb5hGgsN8AiAYNDCTIpDTX\nB99HYc3ujJBTNppoAvRkGKRy5aAUT8jg/7xJHTRR+XfsDDvbr07nHMw261TVlF8i\ndWXUV/t2gwjT8bYDWc6P78iBIwKBgQDjbE0WZJgWGBxJbkEuRnronStuec3fnGXr\ncH67mffvVnK0Xqewj1nHhnIjEmhf1a+xX7NEuymPR5sIrQxPqMNhbtG3zK73cfMs\nqX5WJ6lWRUTHvDjIVVE2w/rDSZErkmX/LrLoZoybyUg5/2i2cXyE/9MPHqUHWlCy\nL2+zAjrQrQKBgQCCUoFXMn1KzZ59FKV7KdT8WB53Rz/3s2ePZrPq0JV6zqgtrEJx\nYZbyedO6y/TIkwsY8FHE3PAP/hL5aA0jlkSwY6ggEb7VOslEiAOTNxyi4pjrYZTR\nLGckoYFlHw2qFGcRnfmGP8ZNzWx+Qq+CYOyWPNjToBGn+lpPWbuOMJ4rXwKBgQDG\nCMynrzjwJFadarC/hwgH/rSPIumuyhXGCtOQsOZBN1nyzmnfSTS4lc5V0/WnXf/7\nyIXmV8Q8y/GogGe0BhT8hu9/yXCicEt8nKsygp7mTLMz6ibX69MoiUeXPjx3YKgI\nqbWIwaO3FHMcbdfU5sWzWsGC7QBvgqm6P6xYiJyGkQKBgQC1Wq8xs1XMAg/FmUDY\nQsar6Hs7Yy0ApuWgYPjpRpP98wq6klgR3AvAHOsrBVXJnbiz4WYPvoP6o/kf68R8\nlWudGe+fhZgBf+wS20PxO2b20d9eY2j/6a1WTvicbK0vLplAQ4Xq8J0XNd1X7PEK\nm85QsY1L067t/rlirY1F9U5KzQ==\n-----END PRIVATE KEY-----\n",
+-  "client_email": "firebase-adminsdk-fbsvc@csc325firjava.iam.gserviceaccount.com",
+-  "client_id": "104768325751535026097",
+-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+-  "token_uri": "https://oauth2.googleapis.com/token",
+-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40csc325firjava.iam.gserviceaccount.com",
+-  "universe_domain": "googleapis.com"
+-}
+Index: src/main/resources/files/loginscreen.fxml
+===================================================================
+diff --git a/src/main/resources/files/loginscreen.fxml b/src/main/resources/files/loginscreen.fxml
+deleted file mode 100644
+--- a/src/main/resources/files/loginscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,46 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Button?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.PasswordField?>
+-<?import javafx.scene.control.TextField?>
+-<?import javafx.scene.layout.AnchorPane?>
+-<?import javafx.scene.layout.VBox?>
+-<?import javafx.scene.text.Font?>
+-<?import java.net.URL?>
+-
+-<AnchorPane prefHeight="450.0" prefWidth="400.0" style="-fx-background-color: #f5f7fa;"
+-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+-            fx:controller="com.example.csc325_firebase_webview_auth.view.LoginScreenController">
+-
+-    <stylesheets>
+-        <URL value="@login_screen.css" />
+-    </stylesheets>
+-
+-    <children>
+-        <VBox alignment="CENTER" spacing="15.0" styleClass="login-container"
+-              AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+-            <children>
+-                <Label text="User Login" styleClass="form-title">
+-                    <font>
+-                        <Font name="Segoe UI Bold" size="28.0" />
+-                    </font>
+-                </Label>
+-
+-                <TextField fx:id="emailField" promptText="Email" styleClass="input-field" />
+-
+-                <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field" />
+-
+-                <Label fx:id="messageLabel" styleClass="message-label" />
+-
+-                <Button fx:id="loginButton" onAction="#handleLogin" text="Sign In" styleClass="login-button" />
+-
+-                <Button onAction="#goToRegister" text="Don't have an account? Register" styleClass="link-button" />
+-            </children>
+-            <padding>
+-                <Insets all="30.0" />
+-            </padding>
+-        </VBox>
+-    </children>
+-</AnchorPane>
+\ No newline at end of file
+Index: src/main/resources/files/splashscreen.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/files/splashscreen.fxml b/src/main/resources/files/splashscreen.fxml
+deleted file mode 100644
+--- a/src/main/resources/files/splashscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,37 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.ProgressIndicator?>
+-<?import javafx.scene.image.Image?>
+-<?import javafx.scene.image.ImageView?>
+-<?import javafx.scene.layout.VBox?>
+-<?import java.net.URL?>
+-<?import javafx.scene.layout.StackPane?>
+-<?import javafx.scene.text.Font?>
+-
+-<StackPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f7f9fc;"
+-           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+-           fx:controller="com.example.csc325_firebase_webview_auth.view.SplashController">
+-
+-
+-
+-    <children>
+-        <VBox alignment="CENTER" spacing="20.0">
+-            <children>
+-
+-
+-                <ProgressIndicator prefHeight="60.0" prefWidth="60.0" progress="-1.0" styleClass="loading-indicator" />
+-
+-                <Label fx:id="statusLabel" text="Checking authentication status..." styleClass="status-label">
+-                    <font>
+-                        <Font name="Segoe UI Semibold" size="18.0" />
+-                    </font>
+-                    <VBox.margin>
+-                        <Insets top="15.0" />
+-                    </VBox.margin>
+-                </Label>
+-            </children>
+-        </VBox>
+-    </children>
+-</StackPane>
+\ No newline at end of file
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.java
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.java
+deleted file mode 100644
+--- a/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.java	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,141 +0,0 @@
+-package com.example.csc325_firebase_webview_auth.view;
+-
+-
+-
+-import com.google.firebase.auth.FirebaseAuth;
+-import com.google.firebase.auth.FirebaseAuthException;
+-import com.google.firebase.auth.UserRecord;
+-import com.example.csc325_firebase_webview_auth.model.CurrUser; // Import the helper class
+-import javafx.event.ActionEvent;
+-import javafx.fxml.FXML;
+-import javafx.fxml.Initializable;
+-import javafx.scene.control.Button;
+-import javafx.scene.control.Label;
+-import javafx.scene.control.PasswordField;
+-import javafx.scene.control.TextField;
+-import java.io.IOException;
+-import java.net.URL;
+-import java.util.ResourceBundle;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-
+-/**
+- * Controller for the registration screen (register_screen.fxml).
+- * This class handles new user account creation and input validation.
+- */
+-public class RegisterScreenController implements Initializable {
+-
+-    // --- FXML Injected UI Components ---
+-    // The '@FXML' annotation links these variables to the 'fx:id' attributes in the FXML.
+-    @FXML private TextField emailField;
+-    @FXML private PasswordField passwordField;
+-    @FXML private PasswordField confirmPasswordField;
+-    @FXML private Label messageLabel;
+-    @FXML private Button registerButton; // The registration button
+-
+-    // --- Firebase Authentication Instance ---
+-    private FirebaseAuth fAuth;
+-    private static final Logger logger = Logger.getLogger(RegisterScreenController.class.getName());
+-
+-    /**
+-     * Initializes the controller. This method is automatically called after the FXML is loaded.
+-     * It sets up the Firebase Auth instance and can perform initial checks.
+-     * @param url The location of the FXML file.
+-     * @param rb The resources.
+-     */
+-    @Override
+-    public void initialize(URL url, ResourceBundle rb) {
+-        // Get the Firebase Auth instance from the main App class.
+-        fAuth = App.fauth;
+-        if (fAuth == null) {
+-            logger.log(Level.SEVERE, "Firebase Auth is not initialized. Registration will fail.");
+-            messageLabel.setText("Application error: Firebase services are unavailable.");
+-            registerButton.setDisable(true); // Disable the button if auth is not ready.
+-        }
+-    }
+-
+-    /**
+-     * Handles the registration action when the "Register" button is clicked.
+-     * It performs input validation and attempts to create a new user account in Firebase.
+-     * @param event The ActionEvent that triggered this method.
+-     */
+-    @FXML
+-    private void handleRegister(ActionEvent event) {
+-        String email = emailField.getText();
+-        String password = passwordField.getText();
+-        String confirmPassword = confirmPasswordField.getText();
+-
+-        // --- Input Validation ---
+-        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+-            messageLabel.setText("All fields are required.");
+-            return;
+-        }
+-        if (!password.equals(confirmPassword)) {
+-            messageLabel.setText("Passwords do not match.");
+-            return;
+-        }
+-        if (password.length() < 6) {
+-            // Firebase requires a minimum password length of 6 characters.
+-            messageLabel.setText("Password must be at least 6 characters long.");
+-            return;
+-        }
+-
+-        try {
+-            // --- Firebase User Creation Logic (using Admin SDK) ---
+-            // Create a request object with the user's email and password.
+-            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+-                    .setEmail(email)
+-                    .setPassword(password)
+-                    .setEmailVerified(false) // Set to true if you've verified the email externally.
+-                    .setDisabled(false);
+-
+-            // Create the user in Firebase Authentication. This is a network operation.
+-            UserRecord userRecord = fAuth.createUser(request);
+-            logger.log(Level.INFO, "Successfully created new user with UID: " + userRecord.getUid());
+-
+-            // --- Set the current user's UID globally after successful registration ---
+-            // This is important for navigating to the main app as a logged-in user.
+-            CurrUser.setUid(userRecord.getUid());
+-
+-            messageLabel.setText("Registration successful! Redirecting to dashboard...");
+-
+-            // --- Redirect to the user dashboard (Viewing) on success ---
+-            // Use the static App.setRoot() method to switch the scene to the main dashboard.
+-            App.setRoot("/files/landingscreen.fxml"); // Assuming 'landingscreen.fxml' is the dashboard.
+-
+-        } catch (FirebaseAuthException e) {
+-            // --- Error Handling ---
+-            // Catch specific Firebase Authentication exceptions and provide user-friendly feedback.
+-            String errorMessage = e.getMessage();
+-            if (errorMessage.contains("auth/email-already-exists")) {
+-                messageLabel.setText("This email is already registered.");
+-            } else if (errorMessage.contains("auth/invalid-email")) {
+-                messageLabel.setText("Invalid email format.");
+-            } else if (errorMessage.contains("auth/weak-password")) {
+-                messageLabel.setText("Password is too weak. Please choose a stronger one.");
+-            } else {
+-                messageLabel.setText("Registration failed: " + errorMessage);
+-                logger.log(Level.SEVERE, "Registration failed with unexpected error", e);
+-            }
+-        } catch (IOException ex) {
+-            // Catch errors if the FXML for the main dashboard cannot be loaded.
+-            logger.log(Level.SEVERE, "Failed to load dashboard view after registration", ex);
+-            messageLabel.setText("Application error during redirection.");
+-        }
+-    }
+-
+-    /**
+-     * Handles the action to navigate back to the login screen.
+-     * @param event The ActionEvent that triggered this method.
+-     */
+-    @FXML
+-    private void goToLogin(ActionEvent event) {
+-        logger.log(Level.INFO, "Switching back to login screen.");
+-        try {
+-            // Use the static App.setRoot() method to change the scene to the login screen FXML.
+-            App.setRoot("/files/login_screen.fxml"); // This assumes a separate FXML for the login screen.
+-        } catch (IOException ex) {
+-            logger.log(Level.SEVERE, "Failed to load login view.", ex);
+-        }
+-    }
+-}
+\ No newline at end of file
+Index: target/classes/files/registerscreen.fxml
+===================================================================
+diff --git a/target/classes/files/registerscreen.fxml b/target/classes/files/registerscreen.fxml
+deleted file mode 100644
+--- a/target/classes/files/registerscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,65 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Button?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.PasswordField?>
+-<?import javafx.scene.control.TextField?>
+-<?import javafx.scene.layout.AnchorPane?>
+-<?import javafx.scene.layout.ColumnConstraints?>
+-<?import javafx.scene.layout.GridPane?>
+-<?import javafx.scene.layout.RowConstraints?>
+-<?import javafx.scene.layout.VBox?>
+-<?import javafx.scene.text.Font?>
+-<?import java.net.URL?>
+-
+-<AnchorPane prefHeight="500.0" prefWidth="450.0" style="-fx-background-color: #e0f2f1;"
+-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+-            fx:controller="com.example.csc325_firebase_webview_auth.view.RegisterScreenController">
+-
+-    <stylesheets>
+-        <URL value="@register_screen.css" />
+-    </stylesheets>
+-
+-    <children>
+-        <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+-            <children>
+-                <Label text="Create Account" styleClass="form-title">
+-                    <font>
+-                        <Font name="Segoe UI Bold" size="32.0" />
+-                    </font>
+-                </Label>
+-
+-                <GridPane alignment="CENTER" hgap="15.0" vgap="15.0" styleClass="form-grid">
+-                    <columnConstraints>
+-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+-                    </columnConstraints>
+-                    <rowConstraints>
+-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+-                    </rowConstraints>
+-
+-                    <Label text="Email:" styleClass="grid-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+-                    <TextField fx:id="emailField" promptText="Your Email" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+-
+-                    <Label text="Password:" styleClass="grid-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+-                    <PasswordField fx:id="passwordField" promptText="Create a password" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+-
+-                    <Label text="Confirm:" styleClass="grid-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+-                    <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+-                </GridPane>
+-
+-                <Label fx:id="messageLabel" styleClass="message-label" />
+-
+-                <Button fx:id="registerButton" onAction="#handleRegister" text="Register" styleClass="register-button" />
+-
+-                <Button onAction="#goToLogin" text="Already have an account? Sign In" styleClass="link-button" />
+-            </children>
+-            <padding>
+-                <Insets all="40.0" />
+-            </padding>
+-        </VBox>
+-    </children>
+-</AnchorPane>
+\ No newline at end of file
+Index: src/main/resources/files/registerscreen.fxml
+===================================================================
+diff --git a/src/main/resources/files/registerscreen.fxml b/src/main/resources/files/registerscreen.fxml
+deleted file mode 100644
+--- a/src/main/resources/files/registerscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,65 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Button?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.PasswordField?>
+-<?import javafx.scene.control.TextField?>
+-<?import javafx.scene.layout.AnchorPane?>
+-<?import javafx.scene.layout.ColumnConstraints?>
+-<?import javafx.scene.layout.GridPane?>
+-<?import javafx.scene.layout.RowConstraints?>
+-<?import javafx.scene.layout.VBox?>
+-<?import javafx.scene.text.Font?>
+-<?import java.net.URL?>
+-
+-<AnchorPane prefHeight="500.0" prefWidth="450.0" style="-fx-background-color: #e0f2f1;"
+-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+-            fx:controller="com.example.csc325_firebase_webview_auth.view.RegisterScreenController">
+-
+-    <stylesheets>
+-        <URL value="@register_screen.css" />
+-    </stylesheets>
+-
+-    <children>
+-        <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+-            <children>
+-                <Label text="Create Account" styleClass="form-title">
+-                    <font>
+-                        <Font name="Segoe UI Bold" size="32.0" />
+-                    </font>
+-                </Label>
+-
+-                <GridPane alignment="CENTER" hgap="15.0" vgap="15.0" styleClass="form-grid">
+-                    <columnConstraints>
+-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+-                    </columnConstraints>
+-                    <rowConstraints>
+-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+-                    </rowConstraints>
+-
+-                    <Label text="Email:" styleClass="grid-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+-                    <TextField fx:id="emailField" promptText="Your Email" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+-
+-                    <Label text="Password:" styleClass="grid-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+-                    <PasswordField fx:id="passwordField" promptText="Create a password" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+-
+-                    <Label text="Confirm:" styleClass="grid-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+-                    <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+-                </GridPane>
+-
+-                <Label fx:id="messageLabel" styleClass="message-label" />
+-
+-                <Button fx:id="registerButton" onAction="#handleRegister" text="Register" styleClass="register-button" />
+-
+-                <Button onAction="#goToLogin" text="Already have an account? Sign In" styleClass="link-button" />
+-            </children>
+-            <padding>
+-                <Insets all="40.0" />
+-            </padding>
+-        </VBox>
+-    </children>
+-</AnchorPane>
+\ No newline at end of file
+Index: src/main/resources/files/Viewingscreen.fxml
+===================================================================
+diff --git a/src/main/resources/files/Viewingscreen.fxml b/src/main/resources/files/Viewingscreen.fxml
+deleted file mode 100644
+--- a/src/main/resources/files/Viewingscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,69 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Button?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.TableColumn?>
+-<?import javafx.scene.control.TableView?>
+-<?import javafx.scene.control.TextField?>
+-<?import javafx.scene.image.ImageView?>
+-<?import javafx.scene.layout.AnchorPane?>
+-<?import javafx.scene.layout.HBox?>
+-<?import javafx.scene.layout.VBox?>
+-<?import java.net.URL?>
+-
+-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.LandingView">
+-    <stylesheets>
+-        <URL value="@Viewing_screen.css" />
+-    </stylesheets>
+-    <children>
+-        <HBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+-            <children>
+-                <VBox alignment="TOP_CENTER" prefHeight="544.0" prefWidth="350.0" spacing="15.0" styleClass="input-panel">
+-                    <padding>
+-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+-                    </padding>
+-                    <children>
+-                        <ImageView fx:id="img_view" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#showImage" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
+-                            <image>
+-                                <Image url="@profile_empty.png" />
+-                            </image>
+-                        </ImageView>
+-                        <Label text="User Profile" styleClass="section-title"/>
+-
+-                        <TextField fx:id="name" promptText="Name" styleClass="input-field" />
+-                        <TextField fx:id="age" promptText="Age" styleClass="input-field" />
+-                        <TextField fx:id="major" promptText="Major" styleClass="input-field" />
+-
+-                        <Button onAction="#addNewRecord" prefWidth="250.0" text="Add New Record" styleClass="button-primary"/>
+-                        <Button onAction="#editRecord" prefWidth="250.0" text="Edit Selected Record" styleClass="button-secondary"/>
+-                        <Button onAction="#deleteRecord" prefWidth="250.0" text="Delete Selected Record" styleClass="button-delete"/>
+-                        <Button onAction="#clearForm" prefWidth="250.0" text="Clear Form" styleClass="button-clear"/>
+-                    </children>
+-                </VBox>
+-
+-                <VBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS" prefHeight="544.0" prefWidth="550.0" spacing="10.0" styleClass="table-panel">
+-                    <padding>
+-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+-                    </padding>
+-                    <children>
+-                        <Label text="My Records" styleClass="section-title" />
+-
+-                        <TableView fx:id="tv" prefHeight="400.0" prefWidth="530.0" VBox.vgrow="ALWAYS" onMouseClicked="#selectedItemTV">
+-                            <columns>
+-                                <TableColumn fx:id="tv_fn" prefWidth="150.0" text="Name" />
+-                                <TableColumn fx:id="tv_age" prefWidth="80.0" text="Age" />
+-                                <TableColumn fx:id="tv_major" prefWidth="200.0" text="Major" />
+-                            </columns>
+-                        </TableView>
+-
+-                        <Button onAction="#initialize" prefWidth="150.0" text="Refresh Table" styleClass="button-refresh"/>
+-                    </children>
+-                </VBox>
+-            </children>
+-        </HBox>
+-    </children>
+-    <opaqueInsets>
+-        <Insets />
+-    </opaqueInsets>
+-</AnchorPane>
+\ No newline at end of file
+Index: src/main/resources/files/Viewingscreen.css
+===================================================================
+diff --git a/src/main/resources/files/Viewingscreen.css b/src/main/resources/files/Viewingscreen.css
+deleted file mode 100644
+--- a/src/main/resources/files/Viewingscreen.css	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,133 +0,0 @@
+-/*
+- * File: Viewing_screen.css
+- * Description: Styling for the LandingView dashboard.
+- */
+-
+-/* --- General & Root Styles --- */
+-.root {
+-    -fx-font-family: "Segoe UI", sans-serif;
+-    -fx-font-size: 14px;
+-    -fx-background-color: #f8f9fa; /* A very light grey background */
+-}
+-
+-/* --- Panel Styling --- */
+-.input-panel {
+-    -fx-background-color: #ffffff; /* White background */
+-    -fx-background-radius: 10px;
+-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 0);
+-    -fx-padding: 20px;
+-    -fx-spacing: 15px;
+-    -fx-alignment: top-center;
+-}
+-
+-.table-panel {
+-    -fx-background-color: #ffffff;
+-    -fx-background-radius: 10px;
+-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 0);
+-    -fx-padding: 20px;
+-    -fx-spacing: 15px;
+-    -fx-alignment: top-center;
+-}
+-
+-/* --- Text Fields --- */
+-.input-field {
+-    -fx-background-color: #e9ecef; /* Light grey input field */
+-    -fx-prompt-text-fill: #6c757d;
+-    -fx-border-color: #ced4da;
+-    -fx-border-width: 1px;
+-    -fx-border-radius: 5px;
+-    -fx-padding: 8px 10px;
+-}
+-
+-.input-field:focused {
+-    -fx-border-color: #007bff; /* Blue border on focus */
+-    -fx-background-color: white;
+-}
+-
+-/* --- Buttons --- */
+-.button {
+-    -fx-background-color: #6c757d; /* Default grey button */
+-    -fx-text-fill: white;
+-    -fx-font-weight: bold;
+-    -fx-background-radius: 5px;
+-    -fx-padding: 10px 20px;
+-    -fx-cursor: hand;
+-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+-}
+-.button:hover {
+-    -fx-scale-x: 1.05;
+-    -fx-scale-y: 1.05;
+-}
+-
+-.button-primary { -fx-background-color: #007bff; } /* Blue Add button */
+-.button-primary:hover { -fx-background-color: #0056b3; }
+-
+-.button-secondary { -fx-background-color: #28a745; } /* Green Edit button */
+-.button-secondary:hover { -fx-background-color: #218838; }
+-
+-.button-delete { -fx-background-color: #dc3545; } /* Red Delete button */
+-.button-delete:hover { -fx-background-color: #c82333; }
+-
+-.button-clear { -fx-background-color: #ffc107; } /* Yellow Clear button */
+-.button-clear:hover { -fx-background-color: #e0a800; }
+-
+-.button-refresh { -fx-background-color: #17a2b8; } /* Teal Refresh button */
+-.button-refresh:hover { -fx-background-color: #138496; }
+-
+-/* --- TableView Styling --- */
+-.table-view {
+-    -fx-background-color: #f8f9fa;
+-    -fx-border-color: #dee2e6;
+-    -fx-border-width: 1px;
+-    -fx-border-radius: 5px;
+-}
+-
+-.table-view .column-header-background {
+-    -fx-background-color: #343a40; /* Dark header background */
+-    -fx-background-radius: 5px 5px 0 0;
+-    -fx-padding: 10px 0;
+-}
+-
+-.table-view .column-header .label {
+-    -fx-text-fill: white;
+-    -fx-font-weight: bold;
+-    -fx-font-size: 15px;
+-}
+-
+-.table-row-cell {
+-    -fx-background-color: -fx-table-cell-border-color, white;
+-    -fx-background-insets: 0, 0 0 1 0;
+-    -fx-padding: 10px 0;
+-}
+-
+-.table-row-cell:odd {
+-    -fx-background-color: -fx-table-cell-border-color, #f5f5f5; /* Zebra striping */
+-}
+-
+-.table-row-cell:selected {
+-    -fx-background-color: #007bff; /* Selected row color */
+-}
+-
+-.table-row-cell:selected .text {
+-    -fx-fill: white;
+-}
+-
+-.table-cell {
+-    -fx-alignment: CENTER; /* Center content in cells */
+-    -fx-padding: 5px 10px;
+-}
+-
+-/* --- Labels --- */
+-.section-title {
+-    -fx-font-size: 24px;
+-    -fx-font-weight: bold;
+-    -fx-text-fill: #212529;
+-}
+-
+-/* --- ImageView --- */
+-.profile-image {
+-    -fx-border-color: #ced4da;
+-    -fx-border-width: 2px;
+-    -fx-border-radius: 50%;
+-    -fx-background-radius: 50%;
+-}
+\ No newline at end of file
+Index: target/classes/files/loginscreen.fxml
+===================================================================
+diff --git a/target/classes/files/loginscreen.fxml b/target/classes/files/loginscreen.fxml
+deleted file mode 100644
+--- a/target/classes/files/loginscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,46 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Button?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.PasswordField?>
+-<?import javafx.scene.control.TextField?>
+-<?import javafx.scene.layout.AnchorPane?>
+-<?import javafx.scene.layout.VBox?>
+-<?import javafx.scene.text.Font?>
+-<?import java.net.URL?>
+-
+-<AnchorPane prefHeight="450.0" prefWidth="400.0" style="-fx-background-color: #f5f7fa;"
+-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+-            fx:controller="com.example.csc325_firebase_webview_auth.view.LoginScreenController">
+-
+-    <stylesheets>
+-        <URL value="@login_screen.css" />
+-    </stylesheets>
+-
+-    <children>
+-        <VBox alignment="CENTER" spacing="15.0" styleClass="login-container"
+-              AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+-            <children>
+-                <Label text="User Login" styleClass="form-title">
+-                    <font>
+-                        <Font name="Segoe UI Bold" size="28.0" />
+-                    </font>
+-                </Label>
+-
+-                <TextField fx:id="emailField" promptText="Email" styleClass="input-field" />
+-
+-                <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field" />
+-
+-                <Label fx:id="messageLabel" styleClass="message-label" />
+-
+-                <Button fx:id="loginButton" onAction="#handleLogin" text="Sign In" styleClass="login-button" />
+-
+-                <Button onAction="#goToRegister" text="Don't have an account? Register" styleClass="link-button" />
+-            </children>
+-            <padding>
+-                <Insets all="30.0" />
+-            </padding>
+-        </VBox>
+-    </children>
+-</AnchorPane>
+\ No newline at end of file
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/LoginScreenController.java
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginScreenController.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginScreenController.java
+deleted file mode 100644
+--- a/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginScreenController.java	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,125 +0,0 @@
+-package com.example.csc325_firebase_webview_auth.view;
+-
+-import com.google.firebase.auth.FirebaseAuth;
+-import com.google.firebase.auth.FirebaseAuthException;
+-import com.google.firebase.auth.UserRecord;
+-import com.example.csc325_firebase_webview_auth.model.CurrUser; // Import the CurrUser class to set the user ID
+-import javafx.event.ActionEvent;
+-import javafx.fxml.FXML;
+-import javafx.fxml.Initializable;
+-import javafx.scene.control.Button;
+-import javafx.scene.control.Label;
+-import javafx.scene.control.PasswordField;
+-import javafx.scene.control.TextField;
+-import java.io.IOException;
+-import java.net.URL;
+-import java.util.ResourceBundle;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-
+-/**
+- * Controller for the LoginScreen.fxml.
+- * Manages user authentication (sign-in) logic and navigation to other views.
+- */
+-public class LoginScreenController implements Initializable {
+-
+-    // --- FXML Injected UI Components ---
+-    // The '@FXML' annotation is essential for the FXMLLoader to inject the UI components.
+-    @FXML private TextField emailField;
+-    @FXML private PasswordField passwordField;
+-    @FXML private Label messageLabel;
+-    @FXML private Button loginButton; // The login button, injected for potential property binding
+-
+-    // --- Firebase Authentication Instance ---
+-    private FirebaseAuth fAuth;
+-
+-    /**
+-     * Initializes the controller. This method is called automatically when the FXML is loaded.
+-     * It sets up the Firebase Auth instance and any initial UI state.
+-     * @param url The location of the FXML file.
+-     * @param rb The resources.
+-     */
+-    @Override
+-    public void initialize(URL url, ResourceBundle rb) {
+-        // Get the Firebase Auth instance from the main App class.
+-        fAuth = App.fauth;
+-        if (fAuth == null) {
+-            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, "Firebase Auth is not initialized.");
+-            messageLabel.setText("Application error: Firebase services are unavailable.");
+-            loginButton.setDisable(true); // Disable the button if auth is not ready.
+-        }
+-    }
+-
+-    /**
+-     * Handles the login action when the "Sign In" button is clicked.
+-     * It validates user input and attempts to authenticate with Firebase.
+-     * @param event The ActionEvent that triggered this method.
+-     */
+-    @FXML
+-    private void handleLogin(ActionEvent event) {
+-        String email = emailField.getText();
+-        String password = passwordField.getText();
+-
+-        // --- Input Validation ---
+-        if (email.isEmpty() || password.isEmpty()) {
+-            messageLabel.setText("Please enter both email and password.");
+-            return;
+-        }
+-
+-        try {
+-            // --- Authentication Logic (using Firebase Admin SDK) ---
+-            // The Firebase Admin SDK is typically for backend services. For client-side auth,
+-            // the Firebase Client SDK is used, which has direct `signInWithEmailAndPassword` methods.
+-            // Here, we simulate the process by checking if the user exists.
+-            UserRecord userRecord = fAuth.getUserByEmail(email);
+-
+-            // In a production client app, you would use a client SDK for a secure login flow.
+-            // For this demo, we'll assume a successful login if the user record is found.
+-            if (userRecord != null) {
+-                Logger.getLogger(LoginScreenController.class.getName()).log(Level.INFO, "Login successful for user: " + userRecord.getUid());
+-
+-                // --- Set the current user's UID globally using the helper class ---
+-                // This makes the user's information available to other controllers, like your Viewing.java dashboard.
+-                CurrUser.setUid(userRecord.getUid());
+-
+-                // --- Redirect to the main application dashboard on success ---
+-                // We use the static App.setRoot() method to switch the entire scene.
+-                App.setRoot("/files/landingscreen.fxml"); // Redirect to your dashboard view FXML.
+-            } else {
+-                messageLabel.setText("Invalid email or password.");
+-            }
+-
+-        } catch (FirebaseAuthException e) {
+-            // --- Error Handling ---
+-            // Catch specific Firebase authentication errors and provide user-friendly messages.
+-            String errorMessage = e.getMessage();
+-            if (errorMessage.contains("auth/user-not-found") || errorMessage.contains("auth/wrong-password")) {
+-                messageLabel.setText("Invalid email or password.");
+-            } else if (errorMessage.contains("auth/invalid-email")) {
+-                messageLabel.setText("Invalid email format.");
+-            } else {
+-                messageLabel.setText("Login failed: " + errorMessage);
+-                Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, "Login failed", e);
+-            }
+-        } catch (IOException ex) {
+-            // Catch errors if the FXML for the main view cannot be loaded.
+-            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, "Failed to load dashboard view after login", ex);
+-            messageLabel.setText("Application error during redirection.");
+-        }
+-    }
+-
+-    /**
+-     * Handles the action to navigate to the registration screen.
+-     * @param event The ActionEvent that triggered this method.
+-     */
+-    @FXML
+-    private void goToRegister(ActionEvent event) {
+-        System.out.println("Switching to registration form.");
+-        try {
+-            // Redirect to the FXML file for the registration form.
+-            App.setRoot("/files/registration_form.fxml"); // This assumes a separate FXML exists for registration
+-        } catch (IOException ex) {
+-            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, "Failed to load registration view", ex);
+-        }
+-    }
+-}
+\ No newline at end of file
+Index: target/classes/files/Viewingscreen.css
+===================================================================
+diff --git a/target/classes/files/Viewingscreen.css b/target/classes/files/Viewingscreen.css
+deleted file mode 100644
+--- a/target/classes/files/Viewingscreen.css	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,133 +0,0 @@
+-/*
+- * File: Viewing_screen.css
+- * Description: Styling for the LandingView dashboard.
+- */
+-
+-/* --- General & Root Styles --- */
+-.root {
+-    -fx-font-family: "Segoe UI", sans-serif;
+-    -fx-font-size: 14px;
+-    -fx-background-color: #f8f9fa; /* A very light grey background */
+-}
+-
+-/* --- Panel Styling --- */
+-.input-panel {
+-    -fx-background-color: #ffffff; /* White background */
+-    -fx-background-radius: 10px;
+-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 0);
+-    -fx-padding: 20px;
+-    -fx-spacing: 15px;
+-    -fx-alignment: top-center;
+-}
+-
+-.table-panel {
+-    -fx-background-color: #ffffff;
+-    -fx-background-radius: 10px;
+-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 0);
+-    -fx-padding: 20px;
+-    -fx-spacing: 15px;
+-    -fx-alignment: top-center;
+-}
+-
+-/* --- Text Fields --- */
+-.input-field {
+-    -fx-background-color: #e9ecef; /* Light grey input field */
+-    -fx-prompt-text-fill: #6c757d;
+-    -fx-border-color: #ced4da;
+-    -fx-border-width: 1px;
+-    -fx-border-radius: 5px;
+-    -fx-padding: 8px 10px;
+-}
+-
+-.input-field:focused {
+-    -fx-border-color: #007bff; /* Blue border on focus */
+-    -fx-background-color: white;
+-}
+-
+-/* --- Buttons --- */
+-.button {
+-    -fx-background-color: #6c757d; /* Default grey button */
+-    -fx-text-fill: white;
+-    -fx-font-weight: bold;
+-    -fx-background-radius: 5px;
+-    -fx-padding: 10px 20px;
+-    -fx-cursor: hand;
+-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+-}
+-.button:hover {
+-    -fx-scale-x: 1.05;
+-    -fx-scale-y: 1.05;
+-}
+-
+-.button-primary { -fx-background-color: #007bff; } /* Blue Add button */
+-.button-primary:hover { -fx-background-color: #0056b3; }
+-
+-.button-secondary { -fx-background-color: #28a745; } /* Green Edit button */
+-.button-secondary:hover { -fx-background-color: #218838; }
+-
+-.button-delete { -fx-background-color: #dc3545; } /* Red Delete button */
+-.button-delete:hover { -fx-background-color: #c82333; }
+-
+-.button-clear { -fx-background-color: #ffc107; } /* Yellow Clear button */
+-.button-clear:hover { -fx-background-color: #e0a800; }
+-
+-.button-refresh { -fx-background-color: #17a2b8; } /* Teal Refresh button */
+-.button-refresh:hover { -fx-background-color: #138496; }
+-
+-/* --- TableView Styling --- */
+-.table-view {
+-    -fx-background-color: #f8f9fa;
+-    -fx-border-color: #dee2e6;
+-    -fx-border-width: 1px;
+-    -fx-border-radius: 5px;
+-}
+-
+-.table-view .column-header-background {
+-    -fx-background-color: #343a40; /* Dark header background */
+-    -fx-background-radius: 5px 5px 0 0;
+-    -fx-padding: 10px 0;
+-}
+-
+-.table-view .column-header .label {
+-    -fx-text-fill: white;
+-    -fx-font-weight: bold;
+-    -fx-font-size: 15px;
+-}
+-
+-.table-row-cell {
+-    -fx-background-color: -fx-table-cell-border-color, white;
+-    -fx-background-insets: 0, 0 0 1 0;
+-    -fx-padding: 10px 0;
+-}
+-
+-.table-row-cell:odd {
+-    -fx-background-color: -fx-table-cell-border-color, #f5f5f5; /* Zebra striping */
+-}
+-
+-.table-row-cell:selected {
+-    -fx-background-color: #007bff; /* Selected row color */
+-}
+-
+-.table-row-cell:selected .text {
+-    -fx-fill: white;
+-}
+-
+-.table-cell {
+-    -fx-alignment: CENTER; /* Center content in cells */
+-    -fx-padding: 5px 10px;
+-}
+-
+-/* --- Labels --- */
+-.section-title {
+-    -fx-font-size: 24px;
+-    -fx-font-weight: bold;
+-    -fx-text-fill: #212529;
+-}
+-
+-/* --- ImageView --- */
+-.profile-image {
+-    -fx-border-color: #ced4da;
+-    -fx-border-width: 2px;
+-    -fx-border-radius: 50%;
+-    -fx-background-radius: 50%;
+-}
+\ No newline at end of file
+Index: target/classes/files/Viewingscreen.fxml
+===================================================================
+diff --git a/target/classes/files/Viewingscreen.fxml b/target/classes/files/Viewingscreen.fxml
+deleted file mode 100644
+--- a/target/classes/files/Viewingscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,69 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<?import javafx.geometry.Insets?>
+-<?import javafx.scene.control.Button?>
+-<?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.TableColumn?>
+-<?import javafx.scene.control.TableView?>
+-<?import javafx.scene.control.TextField?>
+-<?import javafx.scene.image.ImageView?>
+-<?import javafx.scene.layout.AnchorPane?>
+-<?import javafx.scene.layout.HBox?>
+-<?import javafx.scene.layout.VBox?>
+-<?import java.net.URL?>
+-
+-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.LandingView">
+-    <stylesheets>
+-        <URL value="@Viewing_screen.css" />
+-    </stylesheets>
+-    <children>
+-        <HBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+-            <children>
+-                <VBox alignment="TOP_CENTER" prefHeight="544.0" prefWidth="350.0" spacing="15.0" styleClass="input-panel">
+-                    <padding>
+-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+-                    </padding>
+-                    <children>
+-                        <ImageView fx:id="img_view" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#showImage" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
+-                            <image>
+-                                <Image url="@profile_empty.png" />
+-                            </image>
+-                        </ImageView>
+-                        <Label text="User Profile" styleClass="section-title"/>
+-
+-                        <TextField fx:id="name" promptText="Name" styleClass="input-field" />
+-                        <TextField fx:id="age" promptText="Age" styleClass="input-field" />
+-                        <TextField fx:id="major" promptText="Major" styleClass="input-field" />
+-
+-                        <Button onAction="#addNewRecord" prefWidth="250.0" text="Add New Record" styleClass="button-primary"/>
+-                        <Button onAction="#editRecord" prefWidth="250.0" text="Edit Selected Record" styleClass="button-secondary"/>
+-                        <Button onAction="#deleteRecord" prefWidth="250.0" text="Delete Selected Record" styleClass="button-delete"/>
+-                        <Button onAction="#clearForm" prefWidth="250.0" text="Clear Form" styleClass="button-clear"/>
+-                    </children>
+-                </VBox>
+-
+-                <VBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS" prefHeight="544.0" prefWidth="550.0" spacing="10.0" styleClass="table-panel">
+-                    <padding>
+-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+-                    </padding>
+-                    <children>
+-                        <Label text="My Records" styleClass="section-title" />
+-
+-                        <TableView fx:id="tv" prefHeight="400.0" prefWidth="530.0" VBox.vgrow="ALWAYS" onMouseClicked="#selectedItemTV">
+-                            <columns>
+-                                <TableColumn fx:id="tv_fn" prefWidth="150.0" text="Name" />
+-                                <TableColumn fx:id="tv_age" prefWidth="80.0" text="Age" />
+-                                <TableColumn fx:id="tv_major" prefWidth="200.0" text="Major" />
+-                            </columns>
+-                        </TableView>
+-
+-                        <Button onAction="#initialize" prefWidth="150.0" text="Refresh Table" styleClass="button-refresh"/>
+-                    </children>
+-                </VBox>
+-            </children>
+-        </HBox>
+-    </children>
+-    <opaqueInsets>
+-        <Insets />
+-    </opaqueInsets>
+-</AnchorPane>
+\ No newline at end of file
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/Viewing.java
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/Viewing.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/Viewing.java
+deleted file mode 100644
+--- a/src/main/java/com/example/csc325_firebase_webview_auth/view/Viewing.java	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ /dev/null	(revision f51e11484a5742386bc138d7220c59fa848e053d)
+@@ -1,322 +0,0 @@
+-package com.example.csc325_firebase_webview_auth.view;
+-
+-import com.example.csc325_firebase_webview_auth.model.CurrUser;
+-import com.example.csc325_firebase_webview_auth.model.Person;
+-import com.google.api.core.ApiFuture;
+-import com.google.cloud.firestore.DocumentReference;
+-import com.google.cloud.firestore.QueryDocumentSnapshot;
+-import com.google.cloud.firestore.QuerySnapshot;
+-import com.google.cloud.firestore.WriteResult;
+-import javafx.collections.FXCollections;
+-import javafx.collections.ObservableList;
+-import javafx.fxml.FXML;
+-import javafx.fxml.Initializable;
+-import javafx.scene.control.Label;
+-import javafx.scene.control.TableColumn;
+-import javafx.scene.control.TableView;
+-import javafx.scene.control.TextField;
+-import javafx.scene.control.cell.PropertyValueFactory;
+-import javafx.scene.image.Image;
+-import javafx.scene.image.ImageView;
+-import javafx.scene.input.MouseEvent;
+-import javafx.stage.FileChooser;
+-import javafx.stage.Stage;
+-
+-import java.io.File;
+-import java.net.URL;
+-import java.util.*;
+-import java.util.concurrent.ExecutionException;
+-
+-/**
+- * Controller for the user's main dashboard after successful sign-in.
+- * It handles CRUD operations (Create, Read, Update, Delete) for user-specific data
+- * displayed in a TableView.
+- */
+-public class Viewing implements Initializable {
+-
+-    // --- FXML Injected UI Components ---
+-    // These variables are linked to fx:id attributes in the FXML.
+-    @FXML
+-    TextField name, age, major;
+-
+-    // This field holds the UID of the currently logged-in user.
+-    String currUser;
+-
+-    // TableView and TableColumns for displaying the user's records.
+-    @FXML
+-    private TableView<Person> tv;
+-
+-    @FXML
+-    private TableColumn<Person, Integer> tv_age;
+-
+-    @FXML
+-    private TableColumn<Person, String> tv_fn, tv_major; // NOTE: tv_fn is typically for 'first name'
+-
+-    // ObservableList to hold the data displayed in the TableView.
+-    // This list automatically updates the TableView when its content changes.
+-    ObservableList<Person> data = FXCollections.observableList(new ArrayList<Person>());
+-
+-    // ImageView for displaying a user's profile picture.
+-    @FXML
+-    ImageView img_view;
+-
+-    /**
+-     * Initializes the controller after the FXML file has been loaded.
+-     * This is where you set up the TableView, fetch initial data, and get the current user's ID.
+-     *
+-     * @param url The location used to resolve relative paths for the root object.
+-     * @param resourceBundle The resources used to localize the root object.
+-     */
+-    @Override
+-    public void initialize(URL url, ResourceBundle resourceBundle) {
+-
+-        // Get the UID of the currently logged-in user.
+-        // This is crucial for filtering data to show only the logged-in user's records.
+-        currUser = CurrUser.getUid();
+-
+-        // --- TableColumn Initialization ---
+-        // These lines link the columns in the TableView (defined by fx:id) to the properties
+-        // of the 'Person' model class (via its getter methods like 'getName()').
+-        tv_fn.setCellValueFactory(new PropertyValueFactory<>("name")); // Mapped to 'name' property in Person.
+-        tv_age.setCellValueFactory(new PropertyValueFactory<>("age")); // Mapped to 'age' property in Person.
+-        tv_major.setCellValueFactory(new PropertyValueFactory<>("major")); // Mapped to 'major' property in Person.
+-
+-        // --- Asynchronously Read User Data from Firestore ---
+-        // This process fetches documents from the "References" collection.
+-        ApiFuture<QuerySnapshot> future = App.fstore.collection("References").get();
+-
+-        // This try-catch block waits for the Firestore query to complete.
+-        try {
+-            // Get the list of documents from the query result.
+-            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+-
+-            if (documents.size() > 0) {
+-                System.out.println("Found documents in Firestore.");
+-
+-                // Iterate through each document found.
+-                for (QueryDocumentSnapshot document : documents) {
+-                    System.out.println("Processing document with Age: " + document.getData().get("Age"));
+-
+-                    // Create a new Person object from the Firestore document data.
+-                    Person person = new Person(
+-                            String.valueOf(document.getData().get("Name")),
+-                            document.getData().get("Major").toString(),
+-                            Integer.parseInt(document.getData().get("Age").toString())
+-                    );
+-
+-                    // --- Filter data to show only the current user's records ---
+-                    // This is a key step to personalize the dashboard.
+-                    if(document.getData().get("User").equals(currUser)) {
+-                        data.add(person); // Add the person object to the ObservableList.
+-                    }
+-                }
+-            } else {
+-                System.out.println("No data found in the database.");
+-            }
+-
+-        } catch (InterruptedException | ExecutionException ex) {
+-            // Print the stack trace if an error occurs during fetching data.
+-            ex.printStackTrace();
+-        }
+-
+-        // --- Bind the ObservableList to the TableView ---
+-        // This displays the filtered data in the table.
+-        tv.setItems(data);
+-    }
+-
+-
+-    /**
+-     * Handles adding a new record to Firestore and updating the TableView.
+-     */
+-    @FXML
+-    protected void addNewRecord() {
+-        // Add the new record to the local ObservableList first for immediate UI update.
+-        data.add(new Person(name.getText(), major.getText(), Integer.parseInt(age.getText())));
+-
+-        // Create a new document reference with a random UUID as the document ID.
+-        DocumentReference docRef = App.fstore.collection("References").document(UUID.randomUUID().toString());
+-
+-        // Prepare the data to be written to Firestore.
+-        Map<String, Object> datas = new HashMap<>();
+-        datas.put("Name", name.getText());
+-        datas.put("Major", major.getText());
+-        datas.put("Age", Integer.parseInt(age.getText()));
+-        datas.put("User", currUser); // Add the current user's UID to the document.
+-
+-        // Asynchronously write the data to Firestore.
+-        ApiFuture<WriteResult> result = docRef.set(datas);
+-
+-        // Note: The result.get() is missing here, so the write is asynchronous and not waited on.
+-        // You may want to add a try-catch block with result.get() to confirm completion.
+-    }
+-
+-    /**
+-     * Clears the input fields in the form.
+-     */
+-    @FXML
+-    protected void clearForm() {
+-        name.setText("");
+-        age.setText("");
+-        major.setText("");
+-    }
+-
+-    /**
+-     * Closes the application.
+-     */
+-    @FXML
+-    protected void closeApplication() {
+-        System.exit(0);
+-    }
+-
+-
+-    /**
+-     * Edits a selected record in the TableView and updates it in Firestore.
+-     * This method is inefficient as it reads all documents from the database to find the one to delete.
+-     */
+-    @FXML
+-    protected void editRecord() {
+-        // Get the selected Person from the TableView.
+-        Person p = tv.getSelectionModel().getSelectedItem();
+-
+-        if (p == null) {
+-            // Add a check to ensure an item is selected.
+-            System.out.println("Please select a record to edit.");
+-            return;
+-        }
+-
+-        // --- INEFFICIENCY WARNING ---
+-        // This approach fetches ALL documents from Firestore to find the record's ID.
+-        // For a large database, this is very inefficient. A better approach would be
+-        // to store the Firestore Document ID as a property of your Person model.
+-        ApiFuture<QuerySnapshot> future = App.fstore.collection("References").get();
+-        List<QueryDocumentSnapshot> documents;
+-        try {
+-            documents = future.get().getDocuments();
+-            if (!documents.isEmpty()) {
+-                // Iterate to find the document that matches the selected Person.
+-                for (QueryDocumentSnapshot document : documents) {
+-                    if (document.getData().get("User").equals(currUser) &&
+-                            document.getData().get("Name").equals(p.getName()) &&
+-                            document.getData().get("Major").equals(p.getMajor()) &&
+-                            Integer.parseInt(document.getData().get("Age").toString()) == p.getAge()) {
+-
+-                        // Delete the old document.
+-                        DocumentReference docRef = App.fstore.collection("References").document(document.getId());
+-                        docRef.delete();
+-                        System.out.println("Old record deleted for editing.");
+-                        break; // Exit the loop once the document is found and deleted.
+-                    }
+-                }
+-            }
+-        } catch (InterruptedException | ExecutionException ex) {
+-            ex.printStackTrace();
+-        }
+-
+-        // --- Update the local ObservableList ---
+-        int c = data.indexOf(p);
+-        Person p2 = new Person(name.getText(), major.getText(), Integer.parseInt(age.getText()));
+-        data.remove(c);
+-        data.add(c, p2);
+-
+-        // --- Add the updated record as a new document to Firestore ---
+-        // This creates a new document instead of updating the old one.
+-        DocumentReference docRef = App.fstore.collection("References").document(UUID.randomUUID().toString());
+-        Map<String, Object> datas = new HashMap<>();
+-        datas.put("Name", name.getText());
+-        datas.put("Major", major.getText());
+-        datas.put("Age", Integer.parseInt(age.getText()));
+-        datas.put("User", currUser);
+-        ApiFuture<WriteResult> result = docRef.set(datas);
+-
+-        tv.getSelectionModel().select(c); // Re-select the edited item in the TableView.
+-
+-        // This method should be improved to perform a direct update to avoid a read and delete.
+-    }
+-
+-    /**
+-     * Deletes a selected record from the TableView and Firestore.
+-     * This method is inefficient as it reads all documents from the database to find the one to delete.
+-     */
+-    @FXML
+-    protected void deleteRecord() {
+-        // Get the selected Person from the TableView.
+-        Person p = tv.getSelectionModel().getSelectedItem();
+-
+-        if (p == null) {
+-            System.out.println("Please select a record to delete.");
+-            return;
+-        }
+-
+-        // --- INEFFICIENCY WARNING ---
+-        // This method also fetches ALL documents just to find one ID for deletion.
+-        // It should be optimized by storing the document ID in the Person object.
+-        ApiFuture<QuerySnapshot> future = App.fstore.collection("References").get();
+-        List<QueryDocumentSnapshot> documents;
+-        try {
+-            documents = future.get().getDocuments();
+-
+-            if (!documents.isEmpty()) {
+-                System.out.println("Searching for record to delete...");
+-                for (QueryDocumentSnapshot document : documents) {
+-                    // Find the matching document based on user, name, major, and age.
+-                    if (document.getData().get("User").equals(currUser) &&
+-                            document.getData().get("Name").equals(p.getName()) &&
+-                            document.getData().get("Major").equals(p.getMajor()) &&
+-                            Integer.parseInt(document.getData().get("Age").toString()) == p.getAge()) {
+-
+-                        // Delete the document from Firestore.
+-                        DocumentReference docRef = App.fstore.collection("References").document(document.getId());
+-                        docRef.delete();
+-                        System.out.println("Record deleted from Firestore.");
+-                        break; // Exit the loop.
+-                    }
+-                }
+-            }
+-        } catch (InterruptedException | ExecutionException ex) {
+-            ex.printStackTrace();
+-        }
+-
+-        // Remove the selected item from the local ObservableList to update the UI.
+-        data.remove(p);
+-    }
+-
+-    /**
+-     * Fills the input form fields with the data from the selected row in the TableView.
+-     *
+-     * @param mouseEvent The MouseEvent that triggered this method (e.g., a mouse click on a row).
+-     */
+-    @FXML
+-    protected void selectedItemTV(MouseEvent mouseEvent) {
+-        Person p = tv.getSelectionModel().getSelectedItem();
+-        if (p != null) {
+-            // Set the TextField values from the selected Person object.
+-            name.setText(p.getName());
+-            age.setText(String.valueOf(p.getAge()));
+-            major.setText(p.getMajor());
+-        }
+-    }
+-
+-    /**
+-     * Closes the application when the close button is clicked.
+-     */
+-    @FXML
+-    protected void close() {
+-        System.exit(0);
+-    }
+-
+-    /**
+-     * Opens a file chooser dialog to select an image and displays it in the ImageView.
+-     */
+-    @FXML
+-    protected void showImage() {
+-        // Create a new FileChooser dialog.
+-        FileChooser fileChooser = new FileChooser();
+-        // Show the dialog and get the selected file.
+-        File file= fileChooser.showOpenDialog(img_view.getScene().getWindow());
+-
+-        if(file != null){
+-            // If a file is selected, set the image in the ImageView from its URI.
+-            img_view.setImage(new Image(file.toURI().toString()));
+-        }
+-    }
+-}
+\ No newline at end of file
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle b/build.gradle
+new file mode 100644
+--- /dev/null	(date 1751049083159)
++++ b/build.gradle	(date 1751049083159)
+@@ -0,0 +1,49 @@
++plugins {
++    id 'java'
++    id 'application'
++    id 'org.openjfx.javafxplugin' version '0.1.0' // Use a recent version of the JavaFX plugin
++}
++
++group 'com.example'
++version '1.0-SNAPSHOT'
++
++repositories {
++    mavenCentral()
++}
++
++dependencies {
++    // JavaFX dependencies
++    implementation 'org.openjfx:javafx-controls:22.0.1' // Use a recent version
++    implementation 'org.openjfx:javafx-fxml:22.0.1'    // Use a recent version
++    implementation 'org.openjfx:javafx-web:22.0.1'     // Use a recent version
++
++    // Firebase Admin SDK dependency - THIS IS WHAT YOU NEED!
++    implementation 'com.google.firebase:firebase-admin:9.3.0' // Check for the latest version!
++
++    // Firestore dependencies
++    implementation 'com.google.cloud:google-cloud-firestore:3.21.0' // Check for the latest version!
++    implementation 'com.google.auth:google-auth-library-oauth2-http:1.24.0' // Check for the latest version!
++
++    // Test dependencies (optional but recommended)
++    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
++    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
++}
++
++javafx {
++    version = "22.0.1" // Match the version from your dependencies
++    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
++}
++
++application {
++    mainModule = 'com.example.csc325_firebase_webview_auth' // Your module name
++    mainClass = 'com.example.csc325_firebase_webview_auth.view.App' // Your main class
++}
++
++compileJava {
++    options.compilerArgs += "--module-path"
++    options.compilerArgs += project.ext.javafx_module_path
++}
++
++// Optional: Add a settings.gradle file for proper Gradle project naming
++// File: settings.gradle
++// rootProject.name = 'your-project-name'
+\ No newline at end of file
+Index: src/main/resources/files/SplashScreen.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/files/SplashScreen.fxml b/src/main/resources/files/SplashScreen.fxml
+new file mode 100644
+--- /dev/null	(date 1751052633901)
++++ b/src/main/resources/files/SplashScreen.fxml	(date 1751052633901)
+@@ -0,0 +1,40 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<?import javafx.geometry.Insets?>
++<?import javafx.scene.control.Button?>
++<?import javafx.scene.control.Label?>
++<?import javafx.scene.image.Image?>
++<?import javafx.scene.image.ImageView?>
++<?import javafx.scene.layout.VBox?>
++<?import javafx.scene.text.Font?>
++
++<?import java.net.URL?>
++<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.SplashScreenController">
++    <stylesheets>
++        <URL value="@style.css" />
++    </stylesheets>
++    <padding>
++        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
++    </padding>
++    <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
++        <image>
++            <Image url="@profile_empty.png" />
++        </image>
++    </ImageView>
++    <Label text="Welcome to the App!" textAlignment="CENTER">
++        <font>
++            <Font name="System Bold" size="24.0" />
++        </font>
++    </Label>
++    <Label text="Please log in or register to continue." />
++    <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLoginButton" prefWidth="200.0" text="Login">
++        <font>
++            <Font size="16.0" />
++        </font>
++    </Button>
++    <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegisterButton" prefWidth="200.0" text="Register">
++        <font>
++            <Font size="16.0" />
++        </font>
++    </Button>
++</VBox>
+\ No newline at end of file
+Index: target/classes/files/splashscreen.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.geometry.Insets?>\r\n<?import javafx.scene.control.Label?>\r\n<?import javafx.scene.control.ProgressIndicator?>\r\n<?import javafx.scene.image.Image?>\r\n<?import javafx.scene.image.ImageView?>\r\n<?import javafx.scene.layout.VBox?>\r\n<?import java.net.URL?>\r\n<?import javafx.scene.layout.StackPane?>\r\n<?import javafx.scene.text.Font?>\r\n\r\n<StackPane prefHeight=\"400.0\" prefWidth=\"600.0\" style=\"-fx-background-color: #f7f9fc;\"\r\n           xmlns=\"http://javafx.com/javafx/17\" xmlns:fx=\"http://javafx.com/fxml/1\"\r\n           fx:controller=\"com.example.csc325_firebase_webview_auth.view.SplashController\">\r\n\r\n\r\n\r\n    <children>\r\n        <VBox alignment=\"CENTER\" spacing=\"20.0\">\r\n            <children>\r\n\r\n\r\n                <ProgressIndicator prefHeight=\"60.0\" prefWidth=\"60.0\" progress=\"-1.0\" styleClass=\"loading-indicator\" />\r\n\r\n                <Label fx:id=\"statusLabel\" text=\"Checking authentication status...\" styleClass=\"status-label\">\r\n                    <font>\r\n                        <Font name=\"Segoe UI Semibold\" size=\"18.0\" />\r\n                    </font>\r\n                    <VBox.margin>\r\n                        <Insets top=\"15.0\" />\r\n                    </VBox.margin>\r\n                </Label>\r\n            </children>\r\n        </VBox>\r\n    </children>\r\n</StackPane>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/files/splashscreen.fxml b/target/classes/files/splashscreen.fxml
+--- a/target/classes/files/splashscreen.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/target/classes/files/splashscreen.fxml	(date 1751052633901)
+@@ -1,37 +1,40 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ 
+ <?import javafx.geometry.Insets?>
++<?import javafx.scene.control.Button?>
+ <?import javafx.scene.control.Label?>
+-<?import javafx.scene.control.ProgressIndicator?>
+ <?import javafx.scene.image.Image?>
+ <?import javafx.scene.image.ImageView?>
+ <?import javafx.scene.layout.VBox?>
+-<?import java.net.URL?>
+-<?import javafx.scene.layout.StackPane?>
+ <?import javafx.scene.text.Font?>
+ 
+-<StackPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f7f9fc;"
+-           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+-           fx:controller="com.example.csc325_firebase_webview_auth.view.SplashController">
+-
+-
+-
+-    <children>
+-        <VBox alignment="CENTER" spacing="20.0">
+-            <children>
+-
+-
+-                <ProgressIndicator prefHeight="60.0" prefWidth="60.0" progress="-1.0" styleClass="loading-indicator" />
+-
+-                <Label fx:id="statusLabel" text="Checking authentication status..." styleClass="status-label">
+-                    <font>
+-                        <Font name="Segoe UI Semibold" size="18.0" />
+-                    </font>
+-                    <VBox.margin>
+-                        <Insets top="15.0" />
+-                    </VBox.margin>
+-                </Label>
+-            </children>
+-        </VBox>
+-    </children>
+-</StackPane>
+\ No newline at end of file
++<?import java.net.URL?>
++<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.SplashScreenController">
++    <stylesheets>
++        <URL value="@style.css" />
++    </stylesheets>
++    <padding>
++        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
++    </padding>
++    <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
++        <image>
++            <Image url="@profile_empty.png" />
++        </image>
++    </ImageView>
++    <Label text="Welcome to the App!" textAlignment="CENTER">
++        <font>
++            <Font name="System Bold" size="24.0" />
++        </font>
++    </Label>
++    <Label text="Please log in or register to continue." />
++    <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLoginButton" prefWidth="200.0" text="Login">
++        <font>
++            <Font size="16.0" />
++        </font>
++    </Button>
++    <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegisterButton" prefWidth="200.0" text="Register">
++        <font>
++            <Font size="16.0" />
++        </font>
++    </Button>
++</VBox>
+\ No newline at end of file
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/LoginFormController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginFormController.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginFormController.java
+new file mode 100644
+--- /dev/null	(date 1751051562245)
++++ b/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginFormController.java	(date 1751051562245)
+@@ -0,0 +1,83 @@
++package com.example.csc325_firebase_webview_auth.view;
++
++// You need this import for UserRecord
++import com.google.firebase.auth.UserRecord;
++import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.auth.FirebaseAuthException;
++import javafx.event.ActionEvent;
++import javafx.fxml.FXML;
++import javafx.scene.control.Label;
++import javafx.scene.control.TextField;
++import java.io.IOException;
++
++public class LoginFormController {
++
++    @FXML
++    private TextField emailField;
++    @FXML
++    private TextField passwordField;
++    @FXML
++    private Label errorMessageLabel;
++
++    @FXML
++    private void handleLoginButton(ActionEvent event) {
++        String email = emailField.getText();
++        String password = passwordField.getText(); // Note: Admin SDK does not use passwords directly.
++
++        if (email.isEmpty() || password.isEmpty()) {
++            errorMessageLabel.setText("Email and password cannot be empty.");
++            return;
++        }
++
++        try {
++            // Use the Admin SDK to get the user by email.
++            // This is a synchronous call.
++            UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
++
++            // Now, you need a way to verify the password.
++            // THE ADMIN SDK DOES NOT PROVIDE A METHOD TO VERIFY A PASSWORD DIRECTLY.
++            // This is a security feature. You should not be handling user passwords on the server.
++            // To properly do this, you would need to use a client-side SDK.
++
++            // Since you are forced to use the Admin SDK, here is a workaround for demonstration purposes.
++            // This is NOT secure and should not be used in production.
++            // You can generate a custom token and use a client-side SDK to sign in with it.
++            // A more direct check is not possible.
++
++            // For this assignment, we will simply check if the user exists by email.
++            // A real sign-in would be more complex.
++            if (userRecord != null) {
++                // If the user exists, assume a successful login for this assignment's purpose.
++                System.out.println("User exists: " + userRecord.getUid());
++
++                // For a real app, you would verify the password here.
++                // Since there's no Admin SDK API for it, we will just proceed.
++
++                // On successful login, switch to the main application scene
++                try {
++                    App.setRoot("/files/AccessFBView.fxml");
++                } catch (IOException e) {
++                    e.printStackTrace();
++                }
++            } else {
++                errorMessageLabel.setText("Login failed: User not found.");
++                System.err.println("User not found for email: " + email);
++            }
++
++        } catch (FirebaseAuthException e) {
++            // Handle errors like user not found or invalid email
++            errorMessageLabel.setText("Login failed: " + e.getMessage());
++            System.err.println("Login failed: " + e.getMessage());
++        }
++    }
++
++    @FXML
++    private void switchToRegister() throws IOException {
++        App.setRoot("/files/RegisterForm.fxml");
++    }
++
++    @FXML
++    private void switchToSplash() throws IOException {
++        App.setRoot("/files/SplashScreen.fxml");
++    }
++}
+\ No newline at end of file
+Index: src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterFormController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterFormController.java b/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterFormController.java
+new file mode 100644
+--- /dev/null	(date 1751047214057)
++++ b/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterFormController.java	(date 1751047214057)
+@@ -0,0 +1,69 @@
++package com.example.csc325_firebase_webview_auth.view;
++
++import com.google.firebase.auth.FirebaseAuthException;
++import com.google.firebase.auth.UserRecord;
++import javafx.event.ActionEvent;
++import javafx.fxml.FXML;
++import javafx.scene.control.Label;
++import javafx.scene.control.TextField;
++import java.io.IOException;
++
++public class RegisterFormController {
++
++    @FXML
++    private TextField emailField;
++    @FXML
++    private TextField passwordField;
++    @FXML
++    private TextField confirmPasswordField;
++    @FXML
++    private Label errorMessageLabel;
++
++    @FXML
++    private void handleRegisterButton(ActionEvent event) {
++        String email = emailField.getText();
++        String password = passwordField.getText();
++        String confirmPassword = confirmPasswordField.getText();
++
++        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
++            errorMessageLabel.setText("All fields are required.");
++            return;
++        }
++        if (!password.equals(confirmPassword)) {
++            errorMessageLabel.setText("Passwords do not match.");
++            return;
++        }
++        if (password.length() < 6) {
++            errorMessageLabel.setText("Password must be at least 6 characters.");
++            return;
++        }
++
++        // Use Firebase Authentication to create a new user
++        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
++                .setEmail(email)
++                .setPassword(password);
++
++        try {
++            UserRecord userRecord = App.fauth.createUser(request);
++            System.out.println("Successfully created new user: " + userRecord.getUid());
++            errorMessageLabel.setText("Registration successful!");
++            // Optionally, switch to the login scene after successful registration
++            App.setRoot("/files/LoginForm.fxml");
++        } catch (FirebaseAuthException ex) {
++            errorMessageLabel.setText("Registration failed: " + ex.getMessage());
++            System.err.println("Registration failed: " + ex.getMessage());
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++    }
++
++    @FXML
++    private void switchToLogin() throws IOException {
++        App.setRoot("/files/LoginForm.fxml");
++    }
++
++    @FXML
++    private void switchToSplash() throws IOException {
++        App.setRoot("/files/SplashScreen.fxml");
++    }
++}
+\ No newline at end of file
+Index: src/main/resources/files/LoginForm.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/files/LoginForm.fxml b/src/main/resources/files/LoginForm.fxml
+new file mode 100644
+--- /dev/null	(date 1751058141570)
++++ b/src/main/resources/files/LoginForm.fxml	(date 1751058141570)
+@@ -0,0 +1,38 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<?import javafx.geometry.Insets?>
++<?import javafx.scene.control.Button?>
++<?import javafx.scene.control.Label?>
++<?import javafx.scene.control.PasswordField?>
++<?import javafx.scene.control.TextField?>
++<?import javafx.scene.layout.VBox?>
++<?import javafx.scene.text.Font?>
++
++<?import java.net.URL?>
++<VBox alignment="CENTER" prefHeight="400.0" prefWidth="400.0" spacing="15.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.LoginFormController">
++    <stylesheets>
++        <URL value="@style.css" />
++    </stylesheets>
++    <padding>
++        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
++    </padding>
++    <Label text="User Login">
++        <font>
++            <Font name="System Bold" size="24.0" />
++        </font>
++    </Label>
++    <TextField fx:id="emailField" promptText="Email" />
++    <PasswordField fx:id="passwordField" promptText="Password" />
++    <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLoginButton" prefWidth="200.0" text="Sign In">
++        <font>
++            <Font size="14.0" />
++        </font>
++    </Button>
++    <Label fx:id="errorMessageLabel" textFill="RED" />
++    <Button mnemonicParsing="false" onAction="#switchToRegister" style="-fx-background-color: transparent; -fx-text-fill: blue;" text="Don't have an account? Register here.">
++        <font>
++            <Font size="12.0" />
++        </font>
++    </Button>
++    <Button mnemonicParsing="false" onAction="#switchToSplash" text="Back to Splash" />
++</VBox>
+\ No newline at end of file
+Index: src/main/resources/files/RegisterForm.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/files/RegisterForm.fxml b/src/main/resources/files/RegisterForm.fxml
+new file mode 100644
+--- /dev/null	(date 1751058141579)
++++ b/src/main/resources/files/RegisterForm.fxml	(date 1751058141579)
+@@ -0,0 +1,39 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<?import javafx.geometry.Insets?>
++<?import javafx.scene.control.Button?>
++<?import javafx.scene.control.Label?>
++<?import javafx.scene.control.PasswordField?>
++<?import javafx.scene.control.TextField?>
++<?import javafx.scene.layout.VBox?>
++<?import javafx.scene.text.Font?>
++
++<?import java.net.URL?>
++<VBox alignment="CENTER" prefHeight="400.0" prefWidth="400.0" spacing="15.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.RegisterFormController">
++    <stylesheets>
++        <URL value="@style.css" />
++    </stylesheets>
++    <padding>
++        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
++    </padding>
++    <Label text="User Registration">
++        <font>
++            <Font name="System Bold" size="24.0" />
++        </font>
++    </Label>
++    <TextField fx:id="emailField" promptText="Email" />
++    <PasswordField fx:id="passwordField" promptText="Password" />
++    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" />
++    <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegisterButton" prefWidth="200.0" text="Register">
++        <font>
++            <Font size="14.0" />
++        </font>
++    </Button>
++    <Label fx:id="errorMessageLabel" textFill="RED" />
++    <Button mnemonicParsing="false" onAction="#switchToLogin" style="-fx-background-color: transparent; -fx-text-fill: blue;" text="Already have an account? Log in here.">
++        <font>
++            <Font size="12.0" />
++        </font>
++    </Button>
++    <Button mnemonicParsing="false" onAction="#switchToSplash" text="Back to Splash" />
++</VBox>
+\ No newline at end of file
+Index: target/classes/files/AccessFBView.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.geometry.Insets?>\r\n<?import javafx.scene.control.Button?>\r\n<?import javafx.scene.control.Menu?>\r\n<?import javafx.scene.control.MenuBar?>\r\n<?import javafx.scene.control.MenuItem?>\r\n<?import javafx.scene.control.TableColumn?>\r\n<?import javafx.scene.control.TableView?>\r\n<?import javafx.scene.control.TextArea?>\r\n<?import javafx.scene.control.TextField?>\r\n<?import javafx.scene.effect.InnerShadow?>\r\n<?import javafx.scene.image.Image?>\r\n<?import javafx.scene.image.ImageView?>\r\n<?import javafx.scene.layout.AnchorPane?>\r\n<?import javafx.scene.layout.HBox?>\r\n<?import javafx.scene.layout.VBox?>\r\n<?import javafx.scene.paint.Color?>\r\n\r\n<AnchorPane prefHeight=\"571.0\" prefWidth=\"894.0\" xmlns=\"http://javafx.com/javafx/20.0.1\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller=\"com.example.csc325_firebase_webview_auth.view.AccessFBView\">\r\n   <children>\r\n      <MenuBar layoutY=\"1.0\" prefHeight=\"27.0\" prefWidth=\"894.0\">\r\n        <menus>\r\n          <Menu mnemonicParsing=\"false\" text=\"File\">\r\n            <items>\r\n                  <MenuItem mnemonicParsing=\"false\" text=\"Register\" />\r\n              <MenuItem mnemonicParsing=\"false\" text=\"Close\" />\r\n            </items>\r\n          </Menu>\r\n          <Menu mnemonicParsing=\"false\" text=\"Edit\">\r\n            <items>\r\n              <MenuItem mnemonicParsing=\"false\" text=\"Delete\" />\r\n            </items>\r\n          </Menu>\r\n          <Menu mnemonicParsing=\"false\" text=\"Help\">\r\n            <items>\r\n              <MenuItem mnemonicParsing=\"false\" text=\"About\" />\r\n            </items>\r\n          </Menu>\r\n        </menus>\r\n      </MenuBar>\r\n      <HBox layoutX=\"6.0\" layoutY=\"28.0\" prefHeight=\"535.0\" prefWidth=\"880.0\">\r\n         <children>\r\n            <AnchorPane prefHeight=\"200.0\" prefWidth=\"200.0\">\r\n               <children>\r\n                  <ImageView fitHeight=\"150.0\" fitWidth=\"129.0\" layoutX=\"17.0\" layoutY=\"14.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                     <effect>\r\n                        <InnerShadow>\r\n                           <color>\r\n                              <Color red=\"0.20652228593826294\" green=\"0.1679999977350235\" blue=\"0.6000000238418579\" />\r\n                           </color>\r\n                        </InnerShadow>\r\n                     </effect>\r\n                     <image>\r\n                        <Image url=\"@profile_empty.png\" />\r\n                     </image>\r\n                  </ImageView>\r\n               </children>\r\n            </AnchorPane>\r\n            <VBox prefHeight=\"535.0\" prefWidth=\"551.0\">\r\n               <children>\r\n                  <TextArea fx:id=\"outputField\" prefHeight=\"184.0\" prefWidth=\"514.0\" />\r\n                  <TableView prefHeight=\"351.0\" prefWidth=\"514.0\">\r\n                    <columns>\r\n                      <TableColumn prefWidth=\"75.0\" text=\"C1\" />\r\n                      <TableColumn prefWidth=\"75.0\" text=\"C2\" />\r\n                    </columns>\r\n                  </TableView>\r\n               </children>\r\n            </VBox>\r\n            <VBox prefHeight=\"535.0\" prefWidth=\"241.0\" spacing=\"10.0\">\r\n               <children>\r\n                  <TextField fx:id=\"nameField\" alignment=\"TOP_LEFT\" prefHeight=\"25.0\" prefWidth=\"272.0\" promptText=\"Name\" />\r\n                  <TextField fx:id=\"majorField\" promptText=\"Major\" />\r\n                  <TextField fx:id=\"ageField\" promptText=\"Age\" />\r\n                  <HBox prefHeight=\"32.0\" prefWidth=\"465.0\">\r\n                     <children>\r\n                        <Button fx:id=\"readButton\" mnemonicParsing=\"false\" onAction=\"#readRecord\" prefHeight=\"25.0\" prefWidth=\"123.0\" text=\"Read\" textAlignment=\"CENTER\">\r\n                           <HBox.margin>\r\n                              <Insets left=\"20.0\" right=\"20.0\" />\r\n                           </HBox.margin>\r\n                        </Button>\r\n                        <Button fx:id=\"writeButton\" mnemonicParsing=\"false\" onAction=\"#addRecord\" prefHeight=\"25.0\" prefWidth=\"128.0\" text=\"Write\" textAlignment=\"CENTER\">\r\n                           <HBox.margin>\r\n                              <Insets left=\"20.0\" right=\"20.0\" />\r\n                           </HBox.margin>\r\n                        </Button>\r\n                     </children>\r\n                  </HBox>\r\n                  <Button fx:id=\"switchroot\" mnemonicParsing=\"false\" onAction=\"#switchToSecondary\" prefHeight=\"25.0\" prefWidth=\"283.0\" text=\"Switch\" textAlignment=\"CENTER\" />\r\n               </children>\r\n               <padding>\r\n                  <Insets bottom=\"10.0\" left=\"10.0\" right=\"10.0\" top=\"10.0\" />\r\n               </padding>\r\n            </VBox>\r\n         </children>\r\n      </HBox>\r\n   </children>\r\n   <opaqueInsets>\r\n      <Insets />\r\n   </opaqueInsets>\r\n</AnchorPane>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/files/AccessFBView.fxml b/target/classes/files/AccessFBView.fxml
+--- a/target/classes/files/AccessFBView.fxml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/target/classes/files/AccessFBView.fxml	(date 1751057839360)
+@@ -17,86 +17,99 @@
+ <?import javafx.scene.layout.VBox?>
+ <?import javafx.scene.paint.Color?>
+ 
++<?import java.net.URL?>
+ <AnchorPane prefHeight="571.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.AccessFBView">
+-   <children>
+-      <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="894.0">
+-        <menus>
+-          <Menu mnemonicParsing="false" text="File">
+-            <items>
+-                  <MenuItem mnemonicParsing="false" text="Register" />
+-              <MenuItem mnemonicParsing="false" text="Close" />
+-            </items>
+-          </Menu>
+-          <Menu mnemonicParsing="false" text="Edit">
+-            <items>
+-              <MenuItem mnemonicParsing="false" text="Delete" />
+-            </items>
+-          </Menu>
+-          <Menu mnemonicParsing="false" text="Help">
+-            <items>
+-              <MenuItem mnemonicParsing="false" text="About" />
+-            </items>
+-          </Menu>
+-        </menus>
+-      </MenuBar>
+-      <HBox layoutX="6.0" layoutY="28.0" prefHeight="535.0" prefWidth="880.0">
+-         <children>
+-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+-               <children>
+-                  <ImageView fitHeight="150.0" fitWidth="129.0" layoutX="17.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+-                     <effect>
+-                        <InnerShadow>
+-                           <color>
+-                              <Color red="0.20652228593826294" green="0.1679999977350235" blue="0.6000000238418579" />
+-                           </color>
+-                        </InnerShadow>
+-                     </effect>
+-                     <image>
+-                        <Image url="@profile_empty.png" />
+-                     </image>
+-                  </ImageView>
+-               </children>
+-            </AnchorPane>
+-            <VBox prefHeight="535.0" prefWidth="551.0">
+-               <children>
+-                  <TextArea fx:id="outputField" prefHeight="184.0" prefWidth="514.0" />
+-                  <TableView prefHeight="351.0" prefWidth="514.0">
+-                    <columns>
+-                      <TableColumn prefWidth="75.0" text="C1" />
+-                      <TableColumn prefWidth="75.0" text="C2" />
+-                    </columns>
+-                  </TableView>
+-               </children>
+-            </VBox>
+-            <VBox prefHeight="535.0" prefWidth="241.0" spacing="10.0">
+-               <children>
+-                  <TextField fx:id="nameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="272.0" promptText="Name" />
+-                  <TextField fx:id="majorField" promptText="Major" />
+-                  <TextField fx:id="ageField" promptText="Age" />
+-                  <HBox prefHeight="32.0" prefWidth="465.0">
+-                     <children>
+-                        <Button fx:id="readButton" mnemonicParsing="false" onAction="#readRecord" prefHeight="25.0" prefWidth="123.0" text="Read" textAlignment="CENTER">
+-                           <HBox.margin>
+-                              <Insets left="20.0" right="20.0" />
+-                           </HBox.margin>
+-                        </Button>
+-                        <Button fx:id="writeButton" mnemonicParsing="false" onAction="#addRecord" prefHeight="25.0" prefWidth="128.0" text="Write" textAlignment="CENTER">
+-                           <HBox.margin>
+-                              <Insets left="20.0" right="20.0" />
+-                           </HBox.margin>
+-                        </Button>
+-                     </children>
+-                  </HBox>
+-                  <Button fx:id="switchroot" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="25.0" prefWidth="283.0" text="Switch" textAlignment="CENTER" />
+-               </children>
+-               <padding>
+-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+-               </padding>
+-            </VBox>
+-         </children>
+-      </HBox>
+-   </children>
+-   <opaqueInsets>
+-      <Insets />
+-   </opaqueInsets>
+-</AnchorPane>
++    <stylesheets>
++        <URL value="@/files/style.css" />
++    </stylesheets>
++    <children>
++        <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="894.0">
++            <menus>
++                <Menu mnemonicParsing="false" text="File">
++                    <items>
++                        <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
++                        <MenuItem mnemonicParsing="false" text="Register" />
++                        <MenuItem mnemonicParsing="false" text="Close" />
++                    </items>
++                </Menu>
++                <Menu mnemonicParsing="false" text="Edit">
++                    <items>
++                        <MenuItem mnemonicParsing="false" text="Delete" />
++                        <MenuItem mnemonicParsing="false" onAction="#handleEditUser" text="Edit User" />
++                    </items>
++                </Menu>
++                <Menu mnemonicParsing="false" text="Profile">
++                    <items>
++                        <MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View Profile" />
++                        <MenuItem mnemonicParsing="false" onAction="#handleUploadPicture" text="Upload Picture" />
++                    </items>
++                </Menu>
++                <Menu mnemonicParsing="false" text="Help">
++                    <items>
++                        <MenuItem mnemonicParsing="false" text="About" />
++                    </items>
++                </Menu>
++            </menus>
++        </MenuBar>
++        <HBox layoutX="6.0" layoutY="28.0" prefHeight="535.0" prefWidth="880.0">
++            <children>
++                <AnchorPane prefHeight="200.0" prefWidth="200.0">
++                    <children>
++                        <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="129.0" layoutX="17.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
++                            <effect>
++                                <InnerShadow>
++                                    <color>
++                                        <Color red="0.20652228593826294" green="0.1679999977350235" blue="0.6000000238418579" />
++                                    </color>
++                                </InnerShadow>
++                            </effect>
++                            <image>
++                                <Image url="@profile_empty.png" />
++                            </image>
++                        </ImageView>
++                    </children>
++                </AnchorPane>
++                <VBox prefHeight="535.0" prefWidth="551.0">
++                    <children>
++                        <TextArea fx:id="outputField" prefHeight="184.0" prefWidth="514.0" />
++                        <TableView prefHeight="351.0" prefWidth="514.0">
++                            <columns>
++                                <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
++                                <TableColumn fx:id="majorColumn" prefWidth="180.0" text="Major" />
++                                <TableColumn fx:id="ageColumn" prefWidth="80.0" text="Age" />
++                            </columns>
++                        </TableView>
++                    </children>
++                </VBox>
++                <VBox prefHeight="535.0" prefWidth="241.0" spacing="10.0">
++                    <children>
++                        <TextField fx:id="nameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="272.0" promptText="Name" />
++                        <TextField fx:id="majorField" promptText="Major" />
++                        <TextField fx:id="ageField" promptText="Age" />
++                        <HBox prefHeight="32.0" prefWidth="465.0">
++                            <children>
++                                <Button fx:id="readButton" mnemonicParsing="false" onAction="#readRecord" prefHeight="25.0" prefWidth="123.0" text="Read" textAlignment="CENTER">
++                                    <HBox.margin>
++                                        <Insets left="20.0" right="20.0" />
++                                    </HBox.margin>
++                                </Button>
++                                <Button fx:id="writeButton" mnemonicParsing="false" onAction="#addRecord" prefHeight="25.0" prefWidth="128.0" text="Write" textAlignment="CENTER">
++                                    <HBox.margin>
++                                        <Insets left="20.0" right="20.0" />
++                                    </HBox.margin>
++                                </Button>
++                            </children>
++                        </HBox>
++                        <Button fx:id="switchroot" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="25.0" prefWidth="283.0" text="Switch" textAlignment="CENTER" />
++                    </children>
++                    <padding>
++                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
++                    </padding>
++                </VBox>
++            </children>
++        </HBox>
++    </children>
++    <opaqueInsets>
++        <Insets />
++    </opaqueInsets>
++</AnchorPane>
+\ No newline at end of file
+Index: src/main/resources/files/style.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/files/style.css b/src/main/resources/files/style.css
+new file mode 100644
+--- /dev/null	(date 1751048182840)
++++ b/src/main/resources/files/style.css	(date 1751048182840)
+@@ -0,0 +1,117 @@
++/*
++ * General Styles
++ */
++.root {
++    -fx-background-color: #f4f4f9;
++    -fx-font-family: "Segoe UI", "Arial", sans-serif;
++}
++
++/*
++ * Header/Menu Bar
++ */
++.menu-bar {
++    -fx-background-color: #3f51b5;
++    -fx-pref-height: 40px;
++}
++
++.menu-bar .label {
++    -fx-text-fill: white;
++    -fx-font-weight: bold;
++}
++
++.menu-item .label {
++    -fx-text-fill: black;
++}
++
++/*
++ * Text Fields
++ */
++.text-field, .password-field, .text-area {
++    -fx-background-color: #ffffff;
++    -fx-border-color: #ccc;
++    -fx-border-radius: 5px;
++    -fx-padding: 8px;
++    -fx-font-size: 14px;
++    -fx-prompt-text-fill: #888;
++}
++
++.text-field:focused, .password-field:focused, .text-area:focused {
++    -fx-border-color: #3f51b5;
++    -fx-border-width: 2px;
++}
++
++/*
++ * Buttons
++ */
++.button {
++    -fx-background-color: #3f51b5;
++    -fx-text-fill: white;
++    -fx-font-weight: bold;
++    -fx-font-size: 16px;
++    -fx-padding: 10px 25px;
++    -fx-border-radius: 8px;
++    -fx-cursor: hand;
++    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
++    -fx-background-insets: 0;
++}
++
++.button:hover {
++    -fx-background-color: #5c6bc0;
++}
++
++.button:pressed {
++    -fx-background-color: #303f9f;
++}
++
++/* Specific button styles (using fx:id) */
++#loginButton {
++    -fx-background-color: #4caf50;
++}
++#loginButton:hover {
++    -fx-background-color: #66bb6a;
++}
++
++#registerButton {
++    -fx-background-color: #f44336;
++}
++#registerButton:hover {
++    -fx-background-color: #e57373;
++}
++
++/*
++ * Labels and Text
++ */
++.label {
++    -fx-text-fill: #333;
++}
++
++.label.title {
++    -fx-font-size: 28px;
++    -fx-font-weight: bold;
++    -fx-text-fill: #1a237e;
++    -fx-padding: 10px 0;
++}
++
++/*
++ * TableView
++ */
++.table-view {
++    -fx-background-color: #ffffff;
++    -fx-border-color: #ccc;
++    -fx-border-width: 1px;
++    -fx-border-radius: 5px;
++    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
++}
++
++.table-view .column-header-background {
++    -fx-background-color: #e0e0e0;
++}
++
++.table-view .column-header .label {
++    -fx-font-weight: bold;
++    -fx-text-fill: #444;
++}
++
++.table-row-cell:selected {
++    -fx-background-color: #e3f2fd;
++}
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e4ae5f67-a013-4cbc-a589-49fa29fa9b6b\" name=\"Changes\" comment=\"GUI update\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"CSS File\" />\r\n        <option value=\"FxmlFile\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\r\n  \"lastFilter\": {\r\n    \"state\": \"OPEN\",\r\n    \"assignee\": \"Robert-ComputerScience\"\r\n  }\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/Robert-ComputerScience/CSC3255_Firebase_webview_Auth_StarterCode.git\",\r\n    \"accountId\": \"5131aaa9-d113-4a10-90a3-e6b573cf8702\"\r\n  }\r\n}]]></component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 5\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2Xu2lfnbK8rrHOnDEGkxX4UMxJg\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.App.executor\": \"Run\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"/Users/alrajam/IdeaProjects/CSC325_Firebase_webview_Auth\",\r\n    \"list.type.of.created.stylesheet\": \"CSS\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"settings.editor.selected.configurable\": \"project.propVCSSupport.DirectoryMappings\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources/com/example/csc325_firebase_webview_auth\" />\r\n      <recent name=\"$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/viewmodel\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources/files\" />\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.example.csc325_firebase_webview_auth.viewmodel\" />\r\n      <recent name=\"com.example.csc325_firebase_webview_auth.models\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.App\">\r\n    <configuration default=\"true\" type=\"AZURE_FUNCTION_SUPPORT\" factoryName=\"Run Functions\">\r\n      <option name=\"appName\" />\r\n      <option name=\"appServicePlanName\" />\r\n      <option name=\"appServicePlanResourceGroup\" />\r\n      <option name=\"appSettingsKey\" value=\"e49bc639-f12f-4bcd-8e8d-df3ca880b23a\" />\r\n      <option name=\"artifact\" />\r\n      <option name=\"debugOptions\" />\r\n      <option name=\"deployment\" />\r\n      <option name=\"deploymentStagingDirectoryPath\" />\r\n      <option name=\"funcPath\" />\r\n      <option name=\"functionHostArguments\" />\r\n      <option name=\"hostJsonPath\" />\r\n      <option name=\"insightsName\" />\r\n      <option name=\"instrumentationKey\" />\r\n      <option name=\"javaVersion\" />\r\n      <option name=\"localSettingsJsonPath\" />\r\n      <option name=\"moduleName\" />\r\n      <option name=\"os\" />\r\n      <option name=\"pricingTier\" />\r\n      <option name=\"providerMap\">\r\n        <map />\r\n      </option>\r\n      <option name=\"region\" />\r\n      <option name=\"resourceGroup\" />\r\n      <option name=\"stagingFolder\" />\r\n      <option name=\"subscription\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"App\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.example.csc325_firebase_webview_auth.view.App\" />\r\n      <module name=\"CSC325_Firebase_webview_Auth\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.example.csc325_firebase_webview_auth.model.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"HelloApplication\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.example.csc325_firebase_webview_auth.HelloApplication\" />\r\n      <module name=\"CSC325_Firebase_webview_Auth\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.example.csc325_firebase_webview_auth.model.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.App\" />\r\n        <item itemvalue=\"Application.HelloApplication\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26094.121\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-IU-251.26094.121\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e4ae5f67-a013-4cbc-a589-49fa29fa9b6b\" name=\"Changes\" comment=\"\" />\r\n      <created>1699464799013</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1699464799013</updated>\r\n      <workItem from=\"1710690942533\" duration=\"7228000\" />\r\n      <workItem from=\"1710732741753\" duration=\"608000\" />\r\n      <workItem from=\"1710733353801\" duration=\"5503000\" />\r\n      <workItem from=\"1750974292080\" duration=\"8637000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"reduce Java version to 17\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1701277362488</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1701277362488</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Initial commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1710733453005</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1710733453005</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"GUI update\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1710737242392</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1710737242393</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"GUI update\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1750989533634</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1750989533634</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"GUI update\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1750989587604</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1750989587604</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"main\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <ignored-roots>\r\n      <path value=\"$PROJECT_DIR$\" />\r\n    </ignored-roots>\r\n    <MESSAGE value=\"reduce Java version to 17\" />\r\n    <MESSAGE value=\"Initial commit\" />\r\n    <MESSAGE value=\"GUI update\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"GUI update\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision f51e11484a5742386bc138d7220c59fa848e053d)
++++ b/.idea/workspace.xml	(date 1751058463569)
+@@ -5,7 +5,41 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="e4ae5f67-a013-4cbc-a589-49fa29fa9b6b" name="Changes" comment="GUI update">
++      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginFormController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterFormController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/files/LoginForm.fxml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/files/RegisterForm.fxml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/files/SplashScreen.fxml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/files/profile_icon.jpg" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/files/style.css" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/LoginScreenController.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/SplashScreenController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/Viewing.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/files/AccessFBView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/files/AccessFBView.fxml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/files/Viewingscreen.css" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/files/Viewingscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/files/loginscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/files/registerscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/files/splashscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/App.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/LoginScreenController.class" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.class" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/SplashScreenController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/SplashScreenController.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/Viewing.class" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/files/AccessFBView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/files/AccessFBView.fxml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/files/Viewingscreen.css" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/files/Viewingscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/files/loginscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/files/registerscreen.fxml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/files/splashscreen.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/files/splashscreen.fxml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -15,27 +49,27 @@
+   <component name="FileTemplateManagerImpl">
+     <option name="RECENT_TEMPLATES">
+       <list>
+-        <option value="CSS File" />
+         <option value="FxmlFile" />
+         <option value="Class" />
++        <option value="CSS File" />
+       </list>
+     </option>
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN",
+-    "assignee": "Robert-ComputerScience"
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;Robert-ComputerScience&quot;
+   }
+-}]]></component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/Robert-ComputerScience/CSC3255_Firebase_webview_Auth_StarterCode.git",
+-    "accountId": "5131aaa9-d113-4a10-90a3-e6b573cf8702"
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/Robert-ComputerScience/CSC3255_Firebase_webview_Auth_StarterCode.git&quot;,
++    &quot;accountId&quot;: &quot;5131aaa9-d113-4a10-90a3-e6b573cf8702&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 5
+ }</component>
+@@ -47,6 +81,8 @@
+   <component name="PropertiesComponent"><![CDATA[{
+   "keyToString": {
+     "Application.App.executor": "Run",
++    "Maven.CSC325_Firebase_webview_Auth [clean].executor": "Run",
++    "Maven.CSC325_Firebase_webview_Auth [install].executor": "Run",
+     "RunOnceActivity.OpenProjectViewOnStart": "true",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "RunOnceActivity.git.unshallow": "true",
+@@ -60,7 +96,10 @@
+     "node.js.selected.package.eslint": "(autodetect)",
+     "node.js.selected.package.tslint": "(autodetect)",
+     "nodejs_package_manager_path": "npm",
+-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
++    "project.structure.last.edited": "Project",
++    "project.structure.proportion": "0.0",
++    "project.structure.side.proportion": "0.2",
++    "settings.editor.selected.configurable": "build.tools",
+     "vue.rearranger.settings.migration": "true"
+   }
+ }]]></component>
+@@ -70,6 +109,7 @@
+       <recent name="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/viewmodel" />
+     </key>
+     <key name="MoveFile.RECENT_KEYS">
++      <recent name="C:\Users\rober\IdeaProjects\CSC3255_Firebase_webview_Auth_StarterCode\src\main\resources\files" />
+       <recent name="$PROJECT_DIR$/src/main/resources/files" />
+       <recent name="$PROJECT_DIR$/src/main/resources" />
+     </key>
+@@ -161,7 +201,9 @@
+       <workItem from="1710690942533" duration="7228000" />
+       <workItem from="1710732741753" duration="608000" />
+       <workItem from="1710733353801" duration="5503000" />
+-      <workItem from="1750974292080" duration="8637000" />
++      <workItem from="1750974292080" duration="17615000" />
++      <workItem from="1751037055636" duration="6666000" />
++      <workItem from="1751050521380" duration="4136000" />
+     </task>
+     <task id="LOCAL-00001" summary="reduce Java version to 17">
+       <option name="closed" value="true" />
+@@ -203,7 +245,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1750989587604</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="GUI update">
++      <option name="closed" value="true" />
++      <created>1750991582761</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1750991582761</updated>
++    </task>
++    <option name="localTasksCounter" value="7" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">

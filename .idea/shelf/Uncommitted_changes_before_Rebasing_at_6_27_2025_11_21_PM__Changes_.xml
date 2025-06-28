@@ -1,0 +1,37 @@
+<changelist name="Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]" date="1751080915373" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Rebasing at 6/27/2025 11:21 PM [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" />
+    <option name="AFTER_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]/AccessFBView.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/SplashScreenController.class" />
+    <option name="AFTER_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/SplashScreenController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]/SplashScreenController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/LoginScreenController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/App.class" />
+    <option name="AFTER_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/App.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]/App.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/RegisterScreenController.class" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="src/main/resources/files/profile_icon.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]/profile_icon.jpg" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/module-info.class" />
+    <option name="AFTER_PATH" value="target/classes/module-info.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Rebasing_at_6_27_2025_11_21_PM_[Changes]/module-info.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/example/csc325_firebase_webview_auth/view/Viewing.class" />
+  </binary>
+</changelist>

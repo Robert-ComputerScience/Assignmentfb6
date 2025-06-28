@@ -1,0 +1,117 @@
+/*
+ * General Styles
+ */
+.root {
+    -fx-background-color: #f4f4f9;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+/*
+ * Header/Menu Bar
+ */
+.menu-bar {
+    -fx-background-color: #3f51b5;
+    -fx-pref-height: 40px;
+}
+
+.menu-bar .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-item .label {
+    -fx-text-fill: black;
+}
+
+/*
+ * Text Fields
+ */
+.text-field, .password-field, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #888;
+}
+
+.text-field:focused, .password-field:focused, .text-area:focused {
+    -fx-border-color: #3f51b5;
+    -fx-border-width: 2px;
+}
+
+/*
+ * Buttons
+ */
+.button {
+    -fx-background-color: #3f51b5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 10px 25px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-insets: 0;
+}
+
+.button:hover {
+    -fx-background-color: #5c6bc0;
+}
+
+.button:pressed {
+    -fx-background-color: #303f9f;
+}
+
+/* Specific button styles (using fx:id) */
+#loginButton {
+    -fx-background-color: #4caf50;
+}
+#loginButton:hover {
+    -fx-background-color: #66bb6a;
+}
+
+#registerButton {
+    -fx-background-color: #f44336;
+}
+#registerButton:hover {
+    -fx-background-color: #e57373;
+}
+
+/*
+ * Labels and Text
+ */
+.label {
+    -fx-text-fill: #333;
+}
+
+.label.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a237e;
+    -fx-padding: 10px 0;
+}
+
+/*
+ * TableView
+ */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #e0e0e0;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #444;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e3f2fd;
+}
