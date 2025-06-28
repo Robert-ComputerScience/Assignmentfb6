@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0' // Use a recent version of the JavaFX plugin
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JavaFX dependencies
+    implementation 'org.openjfx:javafx-controls:22.0.1' // Use a recent version
+    implementation 'org.openjfx:javafx-fxml:22.0.1'    // Use a recent version
+    implementation 'org.openjfx:javafx-web:22.0.1'     // Use a recent version
+
+    // Firebase Admin SDK dependency - THIS IS WHAT YOU NEED!
+    implementation 'com.google.firebase:firebase-admin:9.3.0' // Check for the latest version!
+
+    // Firestore dependencies
+    implementation 'com.google.cloud:google-cloud-firestore:3.21.0' // Check for the latest version!
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.24.0' // Check for the latest version!
+
+    // Test dependencies (optional but recommended)
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+}
+
+javafx {
+    version = "22.0.1" // Match the version from your dependencies
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
+}
+
+application {
+    mainModule = 'com.example.csc325_firebase_webview_auth' // Your module name
+    mainClass = 'com.example.csc325_firebase_webview_auth.view.App' // Your main class
+}
+
+compileJava {
+    options.compilerArgs += "--module-path"
+    options.compilerArgs += project.ext.javafx_module_path
+}
+
+// Optional: Add a settings.gradle file for proper Gradle project naming
+// File: settings.gradle
+// rootProject.name = 'your-project-name'
