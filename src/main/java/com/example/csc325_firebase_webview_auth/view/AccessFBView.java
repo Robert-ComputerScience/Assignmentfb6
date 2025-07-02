@@ -1,6 +1,11 @@
 package com.example.csc325_firebase_webview_auth.view;
 
 // Make sure this import is present at the top of your file
+// ADD THIS LINE
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.example.csc325_firebase_webview_auth.model.Person;
@@ -13,7 +18,9 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +29,12 @@ import java.util.concurrent.ExecutionException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 
 public class AccessFBView {
 
@@ -69,19 +78,71 @@ public class AccessFBView {
         // --- END NEW CODE ---
     }
 
-    @FXML
-    private void addRecord(ActionEvent event) {
-        addData();
-    }
+
 
     @FXML
     private void readRecord(ActionEvent event) {
-        readFirebase();
+        Task<Boolean> readTask = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                // This runs on a background thread
+                return readFirebase();
+            }
+        };
+
+        readTask.setOnSucceeded(e -> {
+            System.out.println("Records loaded successfully.");
+            // The readFirebase() method already updates the TableView
+        });
+
+        readTask.setOnFailed(e -> {
+            System.err.println("Failed to read records.");
+            readTask.getException().printStackTrace();
+            // You could show an error Alert to the user here
+        });
+
+        new Thread(readTask).start();
     }
 
+    // Add this new method to your AccessFBView.java file
+
+    /**
+     * Creates a background task to write the current data from the text fields to Firestore.
+     * This method is triggered by the "Write Record" button.
+     * After a successful write, it clears the input fields and refreshes the table.
+     * @param event The action event from the button click.
+     */
     @FXML
-    private void regRecord(ActionEvent event) {
-        registerUser();
+    private void writeRecord(ActionEvent event) {
+        Task<Void> writeTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // This runs on a background thread to prevent UI freezing
+                addData();
+                return null;
+            }
+        };
+
+        // This runs on the UI thread after the task successfully completes
+        writeTask.setOnSucceeded(e -> {
+            System.out.println("Record written successfully.");
+            // Clear the input fields for the next entry
+            nameField.clear();
+            majorField.clear();
+            ageField.clear();
+            // Automatically refresh the table to show the new record
+            readRecord(null); // We can pass null since the event isn't used in readRecord
+        });
+
+        // This runs if the background task fails
+        writeTask.setOnFailed(e -> {
+            System.err.println("Failed to write record.");
+            writeTask.getException().printStackTrace();
+            // Consider showing an error dialog to the user here
+        });
+
+        // Start the background task
+        new Thread(writeTask).start();
     }
 
     @FXML
@@ -95,16 +156,16 @@ public class AccessFBView {
      * @param event The action event.
      */
     @FXML
-    private void handleLogout(ActionEvent event) throws InterruptedException {
-        // Sign out the user from Firebase Authentication
-        // This is a synchronous call in the Admin SDK
-        App.fauth.wait();
-        System.out.println("User signed out.");
+    private void handleLogout(ActionEvent event) {
+        // 1. In a desktop app, "logging out" is primarily about changing the UI state.
+        //    There is no user session to clear on the server in this simple context.
+        System.out.println("User logout initiated. Redirecting to splash screen.");
 
-        // Redirect to the splash screen
+        // 2. Redirect to the splash screen.
         try {
             App.setRoot("/files/SplashScreen.fxml");
         } catch (IOException e) {
+            // It's good practice to print the stack trace if an error occurs.
             e.printStackTrace();
         }
     }
@@ -126,12 +187,74 @@ public class AccessFBView {
         // Example: App.setRoot("/files/ProfileView.fxml");
     }
 
+    // Inside your controller class...
     @FXML
     private void handleUploadPicture(ActionEvent event) {
-        // You would implement the logic to upload a picture to Firebase Storage here.
-        System.out.println("Upload Picture menu item clicked.");
-        // Example: open a file chooser and upload the selected file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Picture");
+        // Set extension filters to allow only image files
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.bmp")
+        );
+
+        // Show the file open dialog
+        File selectedFile = fileChooser.showOpenDialog(null); // Pass a Stage if available
+
+        if (selectedFile != null) {
+            // Run the upload in a background thread
+            uploadFile(selectedFile);
+        } else {
+            System.out.println("No file selected.");
+        }
     }
+
+    private void uploadFile(File fileToUpload) {
+        Task<Void> uploadTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // --- This runs on a background thread ---
+
+                // IMPORTANT: Replace with your Firebase Storage bucket name
+                String bucketName = "csc325firebase-2daab.appspot.com";
+
+                // This is the name the file will have in Firebase Storage
+                String objectName = "profile-pictures/" + fileToUpload.getName();
+
+                Storage storage = StorageOptions.newBuilder()
+                        .setProjectId("csc325firebase-2daab")
+                        .build()
+                        .getService();
+
+                BlobId blobId = BlobId.of(bucketName, objectName);
+                BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+
+                System.out.println("Uploading file " + fileToUpload.getName() + " to gs://" + bucketName + "/" + objectName);
+
+                // Upload the file
+                storage.create(blobInfo, Files.readAllBytes(fileToUpload.toPath()));
+
+                System.out.println("File uploaded successfully.");
+                return null;
+            }
+        };
+
+        // Handle success
+        uploadTask.setOnSucceeded(e -> {
+            System.out.println("Upload task finished.");
+            // You can show a confirmation dialog to the user here
+        });
+
+        // Handle failure
+        uploadTask.setOnFailed(e -> {
+            System.err.println("Upload failed.");
+            uploadTask.getException().printStackTrace();
+            // You can show an error dialog here
+        });
+
+        // Start the task
+        new Thread(uploadTask).start();
+    }
+
 
 
 
@@ -169,7 +292,7 @@ public class AccessFBView {
                     // --- END OLD CODE ---
 
                     System.out.println(document.getId() + " => " + document.getData().get("Name"));
-                    person = new Person(String.valueOf(document.getData().get("Name")),
+                    person = new Person(document.getId(), String.valueOf(document.getData().get("Name")),
                             document.getData().get("Major").toString(),
                             Integer.parseInt(document.getData().get("Age").toString()));
                     listOfUsers.add(person);
@@ -214,5 +337,48 @@ public class AccessFBView {
             // Logger.getLogger(FirestoreContext.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+
+    @FXML
+    private void handleDeleteRecord(ActionEvent event) {
+        // Get the currently selected item from the TableView
+        Person selectedPerson = tableView.getSelectionModel().getSelectedItem();
+
+        // Check if an item was actually selected
+        if (selectedPerson == null) {
+            System.out.println("No record selected to delete.");
+            // Optionally, show an alert to the user that they need to select a row first.
+            return;
+        }
+
+        // Create a background task for the deletion to avoid freezing the UI
+        Task<Void> deleteTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // This runs on a background thread
+                System.out.println("Deleting record: " + selectedPerson.getId());
+
+                // Use the person's unique ID to delete the document from Firestore
+                App.fstore.collection("References").document(selectedPerson.getId()).delete();
+
+                return null;
+            }
+        };
+
+        // This runs on the UI thread after the background task successfully completes
+        deleteTask.setOnSucceeded(e -> {
+            System.out.println("Deletion successful. Refreshing table.");
+            // Refresh the table to show the updated data
+            readFirebase();
+        });
+
+        // This runs if the background task fails
+        deleteTask.setOnFailed(e -> {
+            System.err.println("Error deleting record.");
+            deleteTask.getException().printStackTrace();
+        });
+
+        // Start the deletion task
+        new Thread(deleteTask).start();
     }
 }

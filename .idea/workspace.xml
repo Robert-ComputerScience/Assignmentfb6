@@ -5,17 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4ae5f67-a013-4cbc-a589-49fa29fa9b6b" name="Changes" comment="GUI update">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/files/SplashScreen.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/files/alumni-association_circle-logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/model/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/view/AccessFBView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/files/AccessFBView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/files/AccessFBView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/files/key.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/files/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/files/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/CSC325_Firebase_webview_Auth-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/CSC325_Firebase_webview_Auth-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/model/Person.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/model/Person.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/csc325_firebase_webview_auth/view/AccessFBView.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/files/AccessFBView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/files/AccessFBView.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/files/key.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/files/key.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/files/splashscreen.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/files/splashscreen.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/files/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/files/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,6 +91,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/com/example/csc325_firebase_webview_auth/viewmodel" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rober\IdeaProjects\Assignmentfb6\src\main\resources\files" />
       <recent name="C:\Users\rober\IdeaProjects\CSC3255_Firebase_webview_Auth_StarterCode\src\main\resources\files" />
       <recent name="$PROJECT_DIR$/src/main/resources/files" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -182,7 +188,7 @@
       <workItem from="1751037055636" duration="6666000" />
       <workItem from="1751050521380" duration="4136000" />
       <workItem from="1751080649645" duration="1983000" />
-      <workItem from="1751476091281" duration="4851000" />
+      <workItem from="1751476091281" duration="14045000" />
     </task>
     <task id="LOCAL-00001" summary="reduce Java version to 17">
       <option name="closed" value="true" />
@@ -232,7 +238,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750991582761</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="GUI update">
+      <option name="closed" value="true" />
+      <created>1751481834237</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1751481834237</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

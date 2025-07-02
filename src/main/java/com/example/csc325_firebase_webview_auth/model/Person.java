@@ -16,14 +16,19 @@ package com.example.csc325_firebase_webview_auth.model;
  *
  */
 public class Person {
+    private String id; // Add this field
     private String name;
     private String major;
     private int age;
 
-    public Person(String name, String major, int age) {
+    public Person(String name, String major, String string, int age) {
         this.name = name;
         this.major = major;
         this.age = age;
+    }
+    // Add the missing getId() method
+    public String getId() {
+        return id;
     }
 
     public String getName() {

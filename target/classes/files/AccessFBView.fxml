@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
@@ -17,7 +18,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<?import java.net.URL?>
 <AnchorPane prefHeight="571.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.AccessFBView">
     <stylesheets>
         <URL value="@style.css" />
@@ -53,9 +53,13 @@
         </MenuBar>
         <HBox layoutX="6.0" layoutY="28.0" prefHeight="535.0" prefWidth="880.0">
             <children>
-                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+
+                <VBox alignment="TOP_CENTER" prefWidth="200.0" spacing="20.0">
+                    <padding>
+                        <Insets top="14.0" />
+                    </padding>
                     <children>
-                        <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="129.0" layoutX="17.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="129.0" pickOnBounds="true" preserveRatio="true">
                             <effect>
                                 <InnerShadow>
                                     <color>
@@ -67,12 +71,21 @@
                                 <Image url="@profile_empty.png" />
                             </image>
                         </ImageView>
+                        <VBox alignment="CENTER" prefHeight="130.0" prefWidth="180.0" spacing="10.0">
+                            <children>
+                                <Button fx:id="writeButton" onAction="#writeRecord" prefWidth="150.0" text="Write Record" />
+                                <Button fx:id="readButton" onAction="#readRecord" prefWidth="150.0" text="Read Record" />
+
+                                <Button onAction="#handleDeleteRecord" prefWidth="150.0" text="Delete Record" />
+                                <Button onAction="#switchToSecondary" prefWidth="150.0" text="Open Web View" />
+                            </children>
+                        </VBox>
                     </children>
-                </AnchorPane>
-                <VBox prefHeight="535.0" prefWidth="551.0">
+                </VBox>
+                <VBox prefHeight="535.0" prefWidth="440.0">
                     <children>
-                        <TextArea fx:id="outputField" prefHeight="184.0" prefWidth="514.0" />
-                        <TableView prefHeight="351.0" prefWidth="514.0">
+                        <TextArea fx:id="outputField" prefHeight="184.0" prefWidth="440.0" />
+                        <TableView prefHeight="351.0" prefWidth="440.0">
                             <columns>
                                 <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
                                 <TableColumn fx:id="majorColumn" prefWidth="180.0" text="Major" />
@@ -86,20 +99,6 @@
                         <TextField fx:id="nameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="272.0" promptText="Name" />
                         <TextField fx:id="majorField" promptText="Major" />
                         <TextField fx:id="ageField" promptText="Age" />
-                        <HBox prefHeight="32.0" prefWidth="465.0">
-                            <children>
-                                <Button fx:id="readButton" mnemonicParsing="false" onAction="#readRecord" prefHeight="25.0" prefWidth="123.0" text="Read" textAlignment="CENTER">
-                                    <HBox.margin>
-                                        <Insets left="20.0" right="20.0" />
-                                    </HBox.margin>
-                                </Button>
-                                <Button fx:id="writeButton" mnemonicParsing="false" onAction="#addRecord" prefHeight="25.0" prefWidth="128.0" text="Write" textAlignment="CENTER">
-                                    <HBox.margin>
-                                        <Insets left="20.0" right="20.0" />
-                                    </HBox.margin>
-                                </Button>
-                            </children>
-                        </HBox>
                         <Button fx:id="switchroot" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="25.0" prefWidth="283.0" text="Switch" textAlignment="CENTER" />
                     </children>
                     <padding>
