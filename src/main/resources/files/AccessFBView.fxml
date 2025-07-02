@@ -20,7 +20,7 @@
 <?import java.net.URL?>
 <AnchorPane prefHeight="571.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc325_firebase_webview_auth.view.AccessFBView">
     <stylesheets>
-        <URL value="@/files/style.css" />
+        <URL value="@style.css" />
     </stylesheets>
     <children>
         <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="894.0">
